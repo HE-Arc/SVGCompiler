@@ -29,50 +29,47 @@ reserved_words = (
 	"white"
 )
 
-
 tokens = (
-	'NUMBER',
-	'IDENTIFIER',
+	'LINE_BREAK',
+	't_SEPARATOR',
+	'LINE_BREAK',
+	'LINE_BREAK',
+	'LINE_BREAK',
+	'LINE_BREAK',
+	'SEPARATOR',
+	'AFFECTATION',
+	'DESCRIPTION',
 	'BRACE_OPEN',
 	'BRACE_CLOSE',
 	'BRACKET_OPEN',
 	'BRACKET_CLOSE',
 	'SQUAREBRACKET_OPEN',
-	'COMMENT',
-	'OPENBRACKET',
-	'CLOSEBRACKET',
 	'SQUAREBRACKET_CLOSE',
-	'DRAW',
 	'COMMENT',
-	'LINEBREAK',
-	'SEPARATOR'
-	'AFFECTATION'
-	'DESCRIPTION',
+	'DRAW',
+	'IGNORE',
 	'VARIABLE_NAME',
-
+	'NUMBER',
 ) + tuple(map(lambda s: s.upper(), reserved_words))
 
-t_BRACE_OPEN = '{'
-t_BRACE_CLOSE = '}'
-t_COMMENT = '//'
-
-
-t_OPENBRACKET = r'\('
-t_CLOSEBRACKET = r'\)'
-t_OPENSQUAREBRACKET = r'\]'
-t_CLOSESQUAREBRACKET = r'\]'
-
-
-t_LINEBREAK = r';'
+t_LINE_BREAK = r';'
 t_SEPARATOR = r','
 t_AFFECTATION = r'='
 t_DESCRIPTION = r':'
 
-t_VARIABLE_NAME = r'\$[a-zA-Z0-9]'
+t_BRACE_OPEN = '{'
+t_BRACE_CLOSE = '}'
+t_BRACKET_OPEN = r'\('
+t_BRACKET_CLOSE = r'\)'
+t_SQUAREBRACKET_OPEN = r'\]'
+t_SQUAREBRACKET_CLOSE = r'\]'
 
+t_COMMENT = '//'
 t_DRAW = r'@'
 
 t_IGNORE = ' \t'
+
+t_VARIABLE_NAME = r'\$[a-zA-Z0-9]'
 
 def t_NUMBER(t):
 	r'\d+'
@@ -92,5 +89,5 @@ if __name__=="__main__":
 	while 1:
 		tok=lex.token()
 		if not tok:
-			break	
+			break
 		print (f"Line {tok.lineno}: {tok.type} ({tok.value})")
