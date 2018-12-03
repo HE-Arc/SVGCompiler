@@ -11,15 +11,8 @@ reserved_words = (
 	"for",
 
 	"boolean",
-	"true",
-	"false",
-
 	"integer",
-
 	"shape",
-	"circle",
-	"triangle",
-	"rectangle",
 
 	"radius",
 	"positionX",
@@ -84,6 +77,10 @@ def t_NUMBER(t):
 	t.value = int(t.value)
 	return t
 
+t_BOOL_VALUE = r'true|false'
+
+t_SHAPE_TYPE = r'circle|triangle|rectangle'
+
 t_COMMENT = r'//.*\n'
 t_ignore = ' |\t|\n'
 
@@ -107,6 +104,10 @@ tokens = (
 	'SQUAREBRACKET_CLOSE',
 
 	'QUOTE',
+
+	'BOOL_VALUE',
+	'SHAPE_TYPE',
+
 
 	'INTEGER_PLUS',
 	'INTEGER_MINUS',
