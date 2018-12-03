@@ -33,9 +33,6 @@ tokens = (
 	'LINE_BREAK',
 	't_SEPARATOR',
 	'LINE_BREAK',
-	'LINE_BREAK',
-	'LINE_BREAK',
-	'LINE_BREAK',
 	'SEPARATOR',
 	'AFFECTATION',
 	'DESCRIPTION',
@@ -50,6 +47,7 @@ tokens = (
 	'IGNORE',
 	'VARIABLE_NAME',
 	'NUMBER',
+	'KEYWORD',
 ) + tuple(map(lambda s: s.upper(), reserved_words))
 
 t_LINE_BREAK = r';'
@@ -61,15 +59,22 @@ t_BRACE_OPEN = '{'
 t_BRACE_CLOSE = '}'
 t_BRACKET_OPEN = r'\('
 t_BRACKET_CLOSE = r'\)'
-t_SQUAREBRACKET_OPEN = r'\]'
+t_SQUAREBRACKET_OPEN = r'\['
 t_SQUAREBRACKET_CLOSE = r'\]'
 
 t_COMMENT = '//'
 t_DRAW = r'@'
 
-t_IGNORE = ' \t'
+t_ignore  = ' |\t|\n'
 
 t_VARIABLE_NAME = r'\$[a-zA-Z0-9]'
+
+def t_KEYWORD(t):
+	r'[A-Za-z_]\w*'
+	if t.value in reserved_words:
+		t.type = t.value.upper()
+	return t
+
 
 def t_NUMBER(t):
 	r'\d+'
