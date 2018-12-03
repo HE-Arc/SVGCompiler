@@ -3,12 +3,14 @@
 [rectangle: width=10, height=20, positionX=10 positionY=10, color=#FF00FF;]
 boolean $my_bool = true;
 integer $your_int = 42;
-shape $their_circle = [circle: radius=10, positionX=3, positionY=4, color=red];
+shape $their_circle = [circle: radius=10, positionX=3, positionY=4, color=#ff00FF;];
 @ $shape
 @ [circle: radius=10, positionX=10 positionY=10, color=red;]
 if (3 < 2)
 {
-	//test
+	boolean $b = true && 3 < 5;
+	integer $ii = 3 * (3 - 9) / 4;
+	$ii = $ii - 2;
 }
 elseif (false || true)
 {
