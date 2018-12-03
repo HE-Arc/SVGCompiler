@@ -36,7 +36,6 @@ reserved_words = (
 tokens = (
 	'LINE_BREAK',
 	't_SEPARATOR',
-	'LINE_BREAK',
 	'SEPARATOR',
 	'AFFECTATION',
 	'DESCRIPTION',
@@ -78,7 +77,7 @@ t_SQUAREBRACKET_CLOSE = r'\]'
 
 t_QUOTE = r'\"|\''
 
-t_COLOR_HEX = r'#[0-9A-Fa-F]{6};'
+t_COLOR_HEX = r'\#[0-9A-Fa-f]{6};'
 
 t_COMMENT = '//'
 t_DRAW = r'@'
