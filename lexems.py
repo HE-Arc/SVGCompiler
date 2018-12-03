@@ -1,6 +1,7 @@
 import ply.lex as lex
 
 reserved_words = (
+<<<<<<< HEAD
 	"if",
 	"elsei"'
 	"else",
