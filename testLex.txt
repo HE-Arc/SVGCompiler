@@ -3,30 +3,30 @@
 [rectangle: width=10, height=20, positionX=10 positionY=10, color=#FF00FF;]
 boolean $my_bool = true;
 integer $your_int = 42;
-string $our_string = "asdasdaa";
 shape $their_circle = [circle: radius=10, positionX=3, positionY=4, color=red];
 @ $shape
 @ [circle: radius=10, positionX=10 positionY=10, color=red;]
-if (cond)
+if (3 < 2)
 {
-	content;
+	//test
 }
-elseif (cond2)
+elseif (false || true)
 {
-    content2;
+	//test
 }
 else
 {
-    content3;
+	//test
 }
-init;
-while (cond)
+integer $i = 0;
+while (true && false)
 {
-	content;
-	incr;
+	//test
+	$i = $i + 1;
 }
-for (init; cond; incr)
-{
-	content;
-}
+// comment
+// for (init; cond; incr) // comment
+// {
+//	content;
+// }
 // comment
