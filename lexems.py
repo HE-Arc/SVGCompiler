@@ -2,7 +2,7 @@ import ply.lex as lex
 
 reserved_words = (
     "if",
-    "elsei"'
+    "elseif",
     "else",
     "while",
     "for",
