@@ -41,6 +41,8 @@ t_DESCRIPTION = r':'
 
 t_VARIABLENAME = r'\$[a-zA-Z0-9]'
 
+t_DRAW = r'@' 
+
 def t_NUMBER(t):
 	r'\d+'
 	t.value = int(t.value)
