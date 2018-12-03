@@ -9,17 +9,21 @@ reserved_words = (
 	"else",
 	"while",
 	"for",
+
 	"boolean",
 	"true",
 	"false",
+
 	"integer",
 	"string",
 	"shape",
+
 	"radius",
 	"positionX",
 	"positionY",
 	"height",
 	"width",
+	
 	"color",
 	"red",
 	"green",
@@ -36,19 +40,29 @@ tokens = (
 	'SEPARATOR',
 	'AFFECTATION',
 	'DESCRIPTION',
+
 	'BRACE_OPEN',
 	'BRACE_CLOSE',
 	'BRACKET_OPEN',
 	'BRACKET_CLOSE',
 	'SQUAREBRACKET_OPEN',
 	'SQUAREBRACKET_CLOSE',
+
+	'QUOTE',
+
+	'COLOR_HEX',
+
 	'COMMENT',
 	'DRAW',
+
 	'IGNORE',
+
 	'VARIABLE_NAME',
+
 	'NUMBER',
 	'KEYWORD',
 ) + tuple(map(lambda s: s.upper(), reserved_words))
+
 
 t_LINE_BREAK = r';'
 t_SEPARATOR = r','
@@ -61,6 +75,10 @@ t_BRACKET_OPEN = r'\('
 t_BRACKET_CLOSE = r'\)'
 t_SQUAREBRACKET_OPEN = r'\['
 t_SQUAREBRACKET_CLOSE = r'\]'
+
+t_QUOTE = r'\"|\''
+
+t_COLOR_HEX = r'#[0-9A-Fa-F]{6};'
 
 t_COMMENT = '//'
 t_DRAW = r'@'
