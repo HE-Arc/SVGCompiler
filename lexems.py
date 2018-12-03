@@ -1,11 +1,14 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import ply.lex as lex
 
 reserved_words = (
-    "if",
-    "elseif",
-    "else",
-    "while",
-    "for",
+	"if",
+	"elseif",
+	"else",
+	"while",
+	"for",
 	"boolean",
 	"true",
 	"false",
@@ -28,11 +31,11 @@ reserved_words = (
 
 
 tokens = (
-    'NUMBER',
-    'IDENTIFIER',
-    'BRACE_OPEN',
-    'BRACE_CLOSE',
-    'COMMENT',
+	'NUMBER',
+	'IDENTIFIER',
+	'BRACE_OPEN',
+	'BRACE_CLOSE',
+	'COMMENT',
 	'OPENBRACKET',
 	'CLOSEBRACKET',
 ) + tuple(map(lambda s: s.upper(), reserved_words))
@@ -40,12 +43,6 @@ tokens = (
 t_BRACE_OPEN = '{'
 t_BRACE_CLOSE = '}'
 t_COMMENT = '//'
-
-
-def t_NUMBER(t):
-    r'\d+\.*\d*'
-    t.value = float(t.value)
-    return t
 
 
 t_OPENBRACKET = r'\('
@@ -72,5 +69,17 @@ t_ignore = ' \t'
 
 
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
+	print("Illegal character '%s'" % t.value[0])
+	t.lexer.skip(1)
+
+lex.lex()
+
+if __name__=="__main__":
+	fileName="testLex.txt"
+	lex.input(open(fileName).read())
+
+	while 1:
+		tok=lex.token()
+		if not tok:
+			break	
+		print (f"Line {tok.lineno}: {tok.type} ({tok.value})")

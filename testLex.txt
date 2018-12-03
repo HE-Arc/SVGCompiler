@@ -1,0 +1,32 @@
+[circle: radius=10, positionX=10 positionY=10, color=red;]
+[triangle: width=10, height=20, positionX=10 positionY=10, color=blue;]
+[rectangle: width=10, height=20, positionX=10 positionY=10, color=#FF00FF;]
+boolean $my_bool = true;
+integer $your_int = 42;
+string $our_string = "asdasdaa";
+shape $their_circle = [circle: radius=10, positionX=3, positionY=4, color=red];
+@ $shape
+@ [circle: radius=10, positionX=10 positionY=10, color=red;]
+if (cond)
+{
+	content;
+}
+elseif (cond2)
+{
+    content2;
+}
+else
+{
+    content3;
+}
+init;
+while (cond)
+{
+	content;
+	incr;
+}
+for (init; cond; incr)
+{
+	content;
+}
+// comment
