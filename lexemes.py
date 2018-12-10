@@ -14,6 +14,13 @@ reserved_words = (
 	"integer",
 	"shape",
 
+	"circle",
+	"triangle",
+	"rectangle",
+
+	"true",
+	"false",
+
 	"radius",
 	"positionX",
 	"positionY",
@@ -128,7 +135,6 @@ tokens = (
 	'VARIABLE_NAME',
 
 	'NUMBER',
-	'KEYWORD',
 ) + tuple(map(lambda s: s.upper(), reserved_words))
 
 lex.lex()

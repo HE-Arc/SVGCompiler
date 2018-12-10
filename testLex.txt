@@ -1,4 +1,5 @@
-[circle: radius=10, positionX=10 positionY=10, color=red;]
+//test
+[circle: radius=10, positionX=10, positionY=10, color=red;]
 [triangle: width=10, height=20, positionX=10 positionY=10, color=blue;]
 [rectangle: width=10, height=20, positionX=10 positionY=10, color=#FF00FF;]
 boolean $my_bool = true;
