@@ -77,7 +77,7 @@ t_BOOL_EQUAL = r'=='
 t_BOOL_NOT_EQUAL = r'!='
 
 # Values
-t_COLOR_HEX = r'\#[0-9A-Fa-f]{6};'
+t_COLOR_HEX = r'\#[0-9A-Fa-f]{6}'
 
 def t_NUMBER(t):
 	r'\d+'
@@ -140,7 +140,7 @@ tokens = (
 lex.lex()
 
 if __name__=="__main__":
-	fileName="testLex.txt"
+	fileName="testLex.phsvg"
 	lex.input(open(fileName).read())
 
 	while 1:

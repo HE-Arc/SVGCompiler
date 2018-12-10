@@ -1,1 +1,728 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    BOOL_AND
+    BOOL_EQUAL
+    BOOL_GT
+    BOOL_LT
+    BOOL_NOT_EQUAL
+    BOOL_OR
+    BOOL_VALUE
+    BRACE_CLOSE
+    BRACE_OPEN
+    BRACKET_CLOSE
+    BRACKET_OPEN
+    COMMENT
+    ELSE
+    ELSEIF
+    FOR
+    IF
+    INTEGER_DIVIDE
+    INTEGER_MINUS
+    INTEGER_PLUS
+    INTEGER_TIMES
+    QUOTE
+    SHAPE_TYPE
+    WHILE
+    ignore
+
+Grammar
+
+Rule 0     S' -> PROGRAM
+Rule 1     PROGRAM -> STATEMENT
+Rule 2     PROGRAM -> STATEMENT LINE_BREAK PROGRAM
+Rule 3     VALUE -> ABSTRACT_SHAPE
+Rule 4     VALUE -> NUMBER
+Rule 5     VALUE -> TRUE
+Rule 6     VALUE -> FALSE
+Rule 7     ABSTRACT_SHAPE -> SQUAREBRACKET_OPEN SHAPECONTENT SQUAREBRACKET_CLOSE
+Rule 8     SHAPECONTENT -> CIRCLECONTENT
+Rule 9     SHAPECONTENT -> TRIANGLECONTENT
+Rule 10    SHAPECONTENT -> RECTANGLECONTENT
+Rule 11    CIRCLECONTENT -> CIRCLE DESCRIPTION ATTRIBUTES
+Rule 12    TRIANGLECONTENT -> TRIANGLE DESCRIPTION ATTRIBUTES
+Rule 13    RECTANGLECONTENT -> RECTANGLE DESCRIPTION ATTRIBUTES
+Rule 14    COLOR_VALUE -> COLOR_HEX
+Rule 15    COLOR_VALUE -> RED
+Rule 16    COLOR_VALUE -> GREEN
+Rule 17    COLOR_VALUE -> BLUE
+Rule 18    COLOR_VALUE -> YELLOW
+Rule 19    COLOR_VALUE -> BLACK
+Rule 20    COLOR_VALUE -> WHITE
+Rule 21    ATTRIBUTES -> ATTRIBUTE SEPARATOR ATTRIBUTES
+Rule 22    ATTRIBUTES -> ATTRIBUTE
+Rule 23    ATTRIBUTE -> RADIUS AFFECTATION NUMBER
+Rule 24    ATTRIBUTE -> POSITIONX AFFECTATION NUMBER
+Rule 25    ATTRIBUTE -> POSITIONY AFFECTATION NUMBER
+Rule 26    ATTRIBUTE -> COLOR AFFECTATION COLOR_VALUE
+Rule 27    ATTRIBUTE -> WIDTH AFFECTATION NUMBER
+Rule 28    ATTRIBUTE -> HEIGHT AFFECTATION NUMBER
+Rule 29    VARIABLE -> BOOLEAN VARIABLE_NAME
+Rule 30    VARIABLE -> INTEGER VARIABLE_NAME
+Rule 31    VARIABLE -> SHAPE VARIABLE_NAME
+Rule 32    STATEMENT -> VARIABLE AFFECTATION VALUE
+Rule 33    STATEMENT -> DRAW ABSTRACT_SHAPE
+
+Terminals, with rules where they appear
+
+AFFECTATION          : 23 24 25 26 27 28 32
+BLACK                : 19
+BLUE                 : 17
+BOOLEAN              : 29
+BOOL_AND             : 
+BOOL_EQUAL           : 
+BOOL_GT              : 
+BOOL_LT              : 
+BOOL_NOT_EQUAL       : 
+BOOL_OR              : 
+BOOL_VALUE           : 
+BRACE_CLOSE          : 
+BRACE_OPEN           : 
+BRACKET_CLOSE        : 
+BRACKET_OPEN         : 
+CIRCLE               : 11
+COLOR                : 26
+COLOR_HEX            : 14
+COMMENT              : 
+DESCRIPTION          : 11 12 13
+DRAW                 : 33
+ELSE                 : 
+ELSEIF               : 
+FALSE                : 6
+FOR                  : 
+GREEN                : 16
+HEIGHT               : 28
+IF                   : 
+INTEGER              : 30
+INTEGER_DIVIDE       : 
+INTEGER_MINUS        : 
+INTEGER_PLUS         : 
+INTEGER_TIMES        : 
+LINE_BREAK           : 2
+NUMBER               : 4 23 24 25 27 28
+POSITIONX            : 24
+POSITIONY            : 25
+QUOTE                : 
+RADIUS               : 23
+RECTANGLE            : 13
+RED                  : 15
+SEPARATOR            : 21
+SHAPE                : 31
+SHAPE_TYPE           : 
+SQUAREBRACKET_CLOSE  : 7
+SQUAREBRACKET_OPEN   : 7
+TRIANGLE             : 12
+TRUE                 : 5
+VARIABLE_NAME        : 29 30 31
+WHILE                : 
+WHITE                : 20
+WIDTH                : 27
+YELLOW               : 18
+error                : 
+ignore               : 
+
+Nonterminals, with rules where they appear
+
+ABSTRACT_SHAPE       : 3 33
+ATTRIBUTE            : 21 22
+ATTRIBUTES           : 11 12 13 21
+CIRCLECONTENT        : 8
+COLOR_VALUE          : 26
+PROGRAM              : 2 0
+RECTANGLECONTENT     : 10
+SHAPECONTENT         : 7
+STATEMENT            : 1 2
+TRIANGLECONTENT      : 9
+VALUE                : 32
+VARIABLE             : 32
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . PROGRAM
+    (1) PROGRAM -> . STATEMENT
+    (2) PROGRAM -> . STATEMENT LINE_BREAK PROGRAM
+    (32) STATEMENT -> . VARIABLE AFFECTATION VALUE
+    (33) STATEMENT -> . DRAW ABSTRACT_SHAPE
+    (29) VARIABLE -> . BOOLEAN VARIABLE_NAME
+    (30) VARIABLE -> . INTEGER VARIABLE_NAME
+    (31) VARIABLE -> . SHAPE VARIABLE_NAME
+
+    DRAW            shift and go to state 4
+    BOOLEAN         shift and go to state 5
+    INTEGER         shift and go to state 6
+    SHAPE           shift and go to state 7
+
+    PROGRAM                        shift and go to state 1
+    STATEMENT                      shift and go to state 2
+    VARIABLE                       shift and go to state 3
+
+state 1
+
+    (0) S' -> PROGRAM .
+
+
+
+state 2
+
+    (1) PROGRAM -> STATEMENT .
+    (2) PROGRAM -> STATEMENT . LINE_BREAK PROGRAM
+
+    $end            reduce using rule 1 (PROGRAM -> STATEMENT .)
+    LINE_BREAK      shift and go to state 8
+
+
+state 3
+
+    (32) STATEMENT -> VARIABLE . AFFECTATION VALUE
+
+    AFFECTATION     shift and go to state 9
+
+
+state 4
+
+    (33) STATEMENT -> DRAW . ABSTRACT_SHAPE
+    (7) ABSTRACT_SHAPE -> . SQUAREBRACKET_OPEN SHAPECONTENT SQUAREBRACKET_CLOSE
+
+    SQUAREBRACKET_OPEN shift and go to state 11
+
+    ABSTRACT_SHAPE                 shift and go to state 10
+
+state 5
+
+    (29) VARIABLE -> BOOLEAN . VARIABLE_NAME
+
+    VARIABLE_NAME   shift and go to state 12
+
+
+state 6
+
+    (30) VARIABLE -> INTEGER . VARIABLE_NAME
+
+    VARIABLE_NAME   shift and go to state 13
+
+
+state 7
+
+    (31) VARIABLE -> SHAPE . VARIABLE_NAME
+
+    VARIABLE_NAME   shift and go to state 14
+
+
+state 8
+
+    (2) PROGRAM -> STATEMENT LINE_BREAK . PROGRAM
+    (1) PROGRAM -> . STATEMENT
+    (2) PROGRAM -> . STATEMENT LINE_BREAK PROGRAM
+    (32) STATEMENT -> . VARIABLE AFFECTATION VALUE
+    (33) STATEMENT -> . DRAW ABSTRACT_SHAPE
+    (29) VARIABLE -> . BOOLEAN VARIABLE_NAME
+    (30) VARIABLE -> . INTEGER VARIABLE_NAME
+    (31) VARIABLE -> . SHAPE VARIABLE_NAME
+
+    DRAW            shift and go to state 4
+    BOOLEAN         shift and go to state 5
+    INTEGER         shift and go to state 6
+    SHAPE           shift and go to state 7
+
+    STATEMENT                      shift and go to state 2
+    PROGRAM                        shift and go to state 15
+    VARIABLE                       shift and go to state 3
+
+state 9
+
+    (32) STATEMENT -> VARIABLE AFFECTATION . VALUE
+    (3) VALUE -> . ABSTRACT_SHAPE
+    (4) VALUE -> . NUMBER
+    (5) VALUE -> . TRUE
+    (6) VALUE -> . FALSE
+    (7) ABSTRACT_SHAPE -> . SQUAREBRACKET_OPEN SHAPECONTENT SQUAREBRACKET_CLOSE
+
+    NUMBER          shift and go to state 18
+    TRUE            shift and go to state 19
+    FALSE           shift and go to state 20
+    SQUAREBRACKET_OPEN shift and go to state 11
+
+    VALUE                          shift and go to state 16
+    ABSTRACT_SHAPE                 shift and go to state 17
+
+state 10
+
+    (33) STATEMENT -> DRAW ABSTRACT_SHAPE .
+
+    LINE_BREAK      reduce using rule 33 (STATEMENT -> DRAW ABSTRACT_SHAPE .)
+    $end            reduce using rule 33 (STATEMENT -> DRAW ABSTRACT_SHAPE .)
+
+
+state 11
+
+    (7) ABSTRACT_SHAPE -> SQUAREBRACKET_OPEN . SHAPECONTENT SQUAREBRACKET_CLOSE
+    (8) SHAPECONTENT -> . CIRCLECONTENT
+    (9) SHAPECONTENT -> . TRIANGLECONTENT
+    (10) SHAPECONTENT -> . RECTANGLECONTENT
+    (11) CIRCLECONTENT -> . CIRCLE DESCRIPTION ATTRIBUTES
+    (12) TRIANGLECONTENT -> . TRIANGLE DESCRIPTION ATTRIBUTES
+    (13) RECTANGLECONTENT -> . RECTANGLE DESCRIPTION ATTRIBUTES
+
+    CIRCLE          shift and go to state 25
+    TRIANGLE        shift and go to state 26
+    RECTANGLE       shift and go to state 27
+
+    SHAPECONTENT                   shift and go to state 21
+    CIRCLECONTENT                  shift and go to state 22
+    TRIANGLECONTENT                shift and go to state 23
+    RECTANGLECONTENT               shift and go to state 24
+
+state 12
+
+    (29) VARIABLE -> BOOLEAN VARIABLE_NAME .
+
+    AFFECTATION     reduce using rule 29 (VARIABLE -> BOOLEAN VARIABLE_NAME .)
+
+
+state 13
+
+    (30) VARIABLE -> INTEGER VARIABLE_NAME .
+
+    AFFECTATION     reduce using rule 30 (VARIABLE -> INTEGER VARIABLE_NAME .)
+
+
+state 14
+
+    (31) VARIABLE -> SHAPE VARIABLE_NAME .
+
+    AFFECTATION     reduce using rule 31 (VARIABLE -> SHAPE VARIABLE_NAME .)
+
+
+state 15
+
+    (2) PROGRAM -> STATEMENT LINE_BREAK PROGRAM .
+
+    $end            reduce using rule 2 (PROGRAM -> STATEMENT LINE_BREAK PROGRAM .)
+
+
+state 16
+
+    (32) STATEMENT -> VARIABLE AFFECTATION VALUE .
+
+    LINE_BREAK      reduce using rule 32 (STATEMENT -> VARIABLE AFFECTATION VALUE .)
+    $end            reduce using rule 32 (STATEMENT -> VARIABLE AFFECTATION VALUE .)
+
+
+state 17
+
+    (3) VALUE -> ABSTRACT_SHAPE .
+
+    LINE_BREAK      reduce using rule 3 (VALUE -> ABSTRACT_SHAPE .)
+    $end            reduce using rule 3 (VALUE -> ABSTRACT_SHAPE .)
+
+
+state 18
+
+    (4) VALUE -> NUMBER .
+
+    LINE_BREAK      reduce using rule 4 (VALUE -> NUMBER .)
+    $end            reduce using rule 4 (VALUE -> NUMBER .)
+
+
+state 19
+
+    (5) VALUE -> TRUE .
+
+    LINE_BREAK      reduce using rule 5 (VALUE -> TRUE .)
+    $end            reduce using rule 5 (VALUE -> TRUE .)
+
+
+state 20
+
+    (6) VALUE -> FALSE .
+
+    LINE_BREAK      reduce using rule 6 (VALUE -> FALSE .)
+    $end            reduce using rule 6 (VALUE -> FALSE .)
+
+
+state 21
+
+    (7) ABSTRACT_SHAPE -> SQUAREBRACKET_OPEN SHAPECONTENT . SQUAREBRACKET_CLOSE
+
+    SQUAREBRACKET_CLOSE shift and go to state 28
+
+
+state 22
+
+    (8) SHAPECONTENT -> CIRCLECONTENT .
+
+    SQUAREBRACKET_CLOSE reduce using rule 8 (SHAPECONTENT -> CIRCLECONTENT .)
+
+
+state 23
+
+    (9) SHAPECONTENT -> TRIANGLECONTENT .
+
+    SQUAREBRACKET_CLOSE reduce using rule 9 (SHAPECONTENT -> TRIANGLECONTENT .)
+
+
+state 24
+
+    (10) SHAPECONTENT -> RECTANGLECONTENT .
+
+    SQUAREBRACKET_CLOSE reduce using rule 10 (SHAPECONTENT -> RECTANGLECONTENT .)
+
+
+state 25
+
+    (11) CIRCLECONTENT -> CIRCLE . DESCRIPTION ATTRIBUTES
+
+    DESCRIPTION     shift and go to state 29
+
+
+state 26
+
+    (12) TRIANGLECONTENT -> TRIANGLE . DESCRIPTION ATTRIBUTES
+
+    DESCRIPTION     shift and go to state 30
+
+
+state 27
+
+    (13) RECTANGLECONTENT -> RECTANGLE . DESCRIPTION ATTRIBUTES
+
+    DESCRIPTION     shift and go to state 31
+
+
+state 28
+
+    (7) ABSTRACT_SHAPE -> SQUAREBRACKET_OPEN SHAPECONTENT SQUAREBRACKET_CLOSE .
+
+    LINE_BREAK      reduce using rule 7 (ABSTRACT_SHAPE -> SQUAREBRACKET_OPEN SHAPECONTENT SQUAREBRACKET_CLOSE .)
+    $end            reduce using rule 7 (ABSTRACT_SHAPE -> SQUAREBRACKET_OPEN SHAPECONTENT SQUAREBRACKET_CLOSE .)
+
+
+state 29
+
+    (11) CIRCLECONTENT -> CIRCLE DESCRIPTION . ATTRIBUTES
+    (21) ATTRIBUTES -> . ATTRIBUTE SEPARATOR ATTRIBUTES
+    (22) ATTRIBUTES -> . ATTRIBUTE
+    (23) ATTRIBUTE -> . RADIUS AFFECTATION NUMBER
+    (24) ATTRIBUTE -> . POSITIONX AFFECTATION NUMBER
+    (25) ATTRIBUTE -> . POSITIONY AFFECTATION NUMBER
+    (26) ATTRIBUTE -> . COLOR AFFECTATION COLOR_VALUE
+    (27) ATTRIBUTE -> . WIDTH AFFECTATION NUMBER
+    (28) ATTRIBUTE -> . HEIGHT AFFECTATION NUMBER
+
+    RADIUS          shift and go to state 34
+    POSITIONX       shift and go to state 35
+    POSITIONY       shift and go to state 36
+    COLOR           shift and go to state 37
+    WIDTH           shift and go to state 38
+    HEIGHT          shift and go to state 39
+
+    ATTRIBUTES                     shift and go to state 32
+    ATTRIBUTE                      shift and go to state 33
+
+state 30
+
+    (12) TRIANGLECONTENT -> TRIANGLE DESCRIPTION . ATTRIBUTES
+    (21) ATTRIBUTES -> . ATTRIBUTE SEPARATOR ATTRIBUTES
+    (22) ATTRIBUTES -> . ATTRIBUTE
+    (23) ATTRIBUTE -> . RADIUS AFFECTATION NUMBER
+    (24) ATTRIBUTE -> . POSITIONX AFFECTATION NUMBER
+    (25) ATTRIBUTE -> . POSITIONY AFFECTATION NUMBER
+    (26) ATTRIBUTE -> . COLOR AFFECTATION COLOR_VALUE
+    (27) ATTRIBUTE -> . WIDTH AFFECTATION NUMBER
+    (28) ATTRIBUTE -> . HEIGHT AFFECTATION NUMBER
+
+    RADIUS          shift and go to state 34
+    POSITIONX       shift and go to state 35
+    POSITIONY       shift and go to state 36
+    COLOR           shift and go to state 37
+    WIDTH           shift and go to state 38
+    HEIGHT          shift and go to state 39
+
+    ATTRIBUTES                     shift and go to state 40
+    ATTRIBUTE                      shift and go to state 33
+
+state 31
+
+    (13) RECTANGLECONTENT -> RECTANGLE DESCRIPTION . ATTRIBUTES
+    (21) ATTRIBUTES -> . ATTRIBUTE SEPARATOR ATTRIBUTES
+    (22) ATTRIBUTES -> . ATTRIBUTE
+    (23) ATTRIBUTE -> . RADIUS AFFECTATION NUMBER
+    (24) ATTRIBUTE -> . POSITIONX AFFECTATION NUMBER
+    (25) ATTRIBUTE -> . POSITIONY AFFECTATION NUMBER
+    (26) ATTRIBUTE -> . COLOR AFFECTATION COLOR_VALUE
+    (27) ATTRIBUTE -> . WIDTH AFFECTATION NUMBER
+    (28) ATTRIBUTE -> . HEIGHT AFFECTATION NUMBER
+
+    RADIUS          shift and go to state 34
+    POSITIONX       shift and go to state 35
+    POSITIONY       shift and go to state 36
+    COLOR           shift and go to state 37
+    WIDTH           shift and go to state 38
+    HEIGHT          shift and go to state 39
+
+    ATTRIBUTES                     shift and go to state 41
+    ATTRIBUTE                      shift and go to state 33
+
+state 32
+
+    (11) CIRCLECONTENT -> CIRCLE DESCRIPTION ATTRIBUTES .
+
+    SQUAREBRACKET_CLOSE reduce using rule 11 (CIRCLECONTENT -> CIRCLE DESCRIPTION ATTRIBUTES .)
+
+
+state 33
+
+    (21) ATTRIBUTES -> ATTRIBUTE . SEPARATOR ATTRIBUTES
+    (22) ATTRIBUTES -> ATTRIBUTE .
+
+    SEPARATOR       shift and go to state 42
+    SQUAREBRACKET_CLOSE reduce using rule 22 (ATTRIBUTES -> ATTRIBUTE .)
+
+
+state 34
+
+    (23) ATTRIBUTE -> RADIUS . AFFECTATION NUMBER
+
+    AFFECTATION     shift and go to state 43
+
+
+state 35
+
+    (24) ATTRIBUTE -> POSITIONX . AFFECTATION NUMBER
+
+    AFFECTATION     shift and go to state 44
+
+
+state 36
+
+    (25) ATTRIBUTE -> POSITIONY . AFFECTATION NUMBER
+
+    AFFECTATION     shift and go to state 45
+
+
+state 37
+
+    (26) ATTRIBUTE -> COLOR . AFFECTATION COLOR_VALUE
+
+    AFFECTATION     shift and go to state 46
+
+
+state 38
+
+    (27) ATTRIBUTE -> WIDTH . AFFECTATION NUMBER
+
+    AFFECTATION     shift and go to state 47
+
+
+state 39
+
+    (28) ATTRIBUTE -> HEIGHT . AFFECTATION NUMBER
+
+    AFFECTATION     shift and go to state 48
+
+
+state 40
+
+    (12) TRIANGLECONTENT -> TRIANGLE DESCRIPTION ATTRIBUTES .
+
+    SQUAREBRACKET_CLOSE reduce using rule 12 (TRIANGLECONTENT -> TRIANGLE DESCRIPTION ATTRIBUTES .)
+
+
+state 41
+
+    (13) RECTANGLECONTENT -> RECTANGLE DESCRIPTION ATTRIBUTES .
+
+    SQUAREBRACKET_CLOSE reduce using rule 13 (RECTANGLECONTENT -> RECTANGLE DESCRIPTION ATTRIBUTES .)
+
+
+state 42
+
+    (21) ATTRIBUTES -> ATTRIBUTE SEPARATOR . ATTRIBUTES
+    (21) ATTRIBUTES -> . ATTRIBUTE SEPARATOR ATTRIBUTES
+    (22) ATTRIBUTES -> . ATTRIBUTE
+    (23) ATTRIBUTE -> . RADIUS AFFECTATION NUMBER
+    (24) ATTRIBUTE -> . POSITIONX AFFECTATION NUMBER
+    (25) ATTRIBUTE -> . POSITIONY AFFECTATION NUMBER
+    (26) ATTRIBUTE -> . COLOR AFFECTATION COLOR_VALUE
+    (27) ATTRIBUTE -> . WIDTH AFFECTATION NUMBER
+    (28) ATTRIBUTE -> . HEIGHT AFFECTATION NUMBER
+
+    RADIUS          shift and go to state 34
+    POSITIONX       shift and go to state 35
+    POSITIONY       shift and go to state 36
+    COLOR           shift and go to state 37
+    WIDTH           shift and go to state 38
+    HEIGHT          shift and go to state 39
+
+    ATTRIBUTE                      shift and go to state 33
+    ATTRIBUTES                     shift and go to state 49
+
+state 43
+
+    (23) ATTRIBUTE -> RADIUS AFFECTATION . NUMBER
+
+    NUMBER          shift and go to state 50
+
+
+state 44
+
+    (24) ATTRIBUTE -> POSITIONX AFFECTATION . NUMBER
+
+    NUMBER          shift and go to state 51
+
+
+state 45
+
+    (25) ATTRIBUTE -> POSITIONY AFFECTATION . NUMBER
+
+    NUMBER          shift and go to state 52
+
+
+state 46
+
+    (26) ATTRIBUTE -> COLOR AFFECTATION . COLOR_VALUE
+    (14) COLOR_VALUE -> . COLOR_HEX
+    (15) COLOR_VALUE -> . RED
+    (16) COLOR_VALUE -> . GREEN
+    (17) COLOR_VALUE -> . BLUE
+    (18) COLOR_VALUE -> . YELLOW
+    (19) COLOR_VALUE -> . BLACK
+    (20) COLOR_VALUE -> . WHITE
+
+    COLOR_HEX       shift and go to state 54
+    RED             shift and go to state 55
+    GREEN           shift and go to state 56
+    BLUE            shift and go to state 57
+    YELLOW          shift and go to state 58
+    BLACK           shift and go to state 59
+    WHITE           shift and go to state 60
+
+    COLOR_VALUE                    shift and go to state 53
+
+state 47
+
+    (27) ATTRIBUTE -> WIDTH AFFECTATION . NUMBER
+
+    NUMBER          shift and go to state 61
+
+
+state 48
+
+    (28) ATTRIBUTE -> HEIGHT AFFECTATION . NUMBER
+
+    NUMBER          shift and go to state 62
+
+
+state 49
+
+    (21) ATTRIBUTES -> ATTRIBUTE SEPARATOR ATTRIBUTES .
+
+    SQUAREBRACKET_CLOSE reduce using rule 21 (ATTRIBUTES -> ATTRIBUTE SEPARATOR ATTRIBUTES .)
+
+
+state 50
+
+    (23) ATTRIBUTE -> RADIUS AFFECTATION NUMBER .
+
+    SEPARATOR       reduce using rule 23 (ATTRIBUTE -> RADIUS AFFECTATION NUMBER .)
+    SQUAREBRACKET_CLOSE reduce using rule 23 (ATTRIBUTE -> RADIUS AFFECTATION NUMBER .)
+
+
+state 51
+
+    (24) ATTRIBUTE -> POSITIONX AFFECTATION NUMBER .
+
+    SEPARATOR       reduce using rule 24 (ATTRIBUTE -> POSITIONX AFFECTATION NUMBER .)
+    SQUAREBRACKET_CLOSE reduce using rule 24 (ATTRIBUTE -> POSITIONX AFFECTATION NUMBER .)
+
+
+state 52
+
+    (25) ATTRIBUTE -> POSITIONY AFFECTATION NUMBER .
+
+    SEPARATOR       reduce using rule 25 (ATTRIBUTE -> POSITIONY AFFECTATION NUMBER .)
+    SQUAREBRACKET_CLOSE reduce using rule 25 (ATTRIBUTE -> POSITIONY AFFECTATION NUMBER .)
+
+
+state 53
+
+    (26) ATTRIBUTE -> COLOR AFFECTATION COLOR_VALUE .
+
+    SEPARATOR       reduce using rule 26 (ATTRIBUTE -> COLOR AFFECTATION COLOR_VALUE .)
+    SQUAREBRACKET_CLOSE reduce using rule 26 (ATTRIBUTE -> COLOR AFFECTATION COLOR_VALUE .)
+
+
+state 54
+
+    (14) COLOR_VALUE -> COLOR_HEX .
+
+    SEPARATOR       reduce using rule 14 (COLOR_VALUE -> COLOR_HEX .)
+    SQUAREBRACKET_CLOSE reduce using rule 14 (COLOR_VALUE -> COLOR_HEX .)
+
+
+state 55
+
+    (15) COLOR_VALUE -> RED .
+
+    SEPARATOR       reduce using rule 15 (COLOR_VALUE -> RED .)
+    SQUAREBRACKET_CLOSE reduce using rule 15 (COLOR_VALUE -> RED .)
+
+
+state 56
+
+    (16) COLOR_VALUE -> GREEN .
+
+    SEPARATOR       reduce using rule 16 (COLOR_VALUE -> GREEN .)
+    SQUAREBRACKET_CLOSE reduce using rule 16 (COLOR_VALUE -> GREEN .)
+
+
+state 57
+
+    (17) COLOR_VALUE -> BLUE .
+
+    SEPARATOR       reduce using rule 17 (COLOR_VALUE -> BLUE .)
+    SQUAREBRACKET_CLOSE reduce using rule 17 (COLOR_VALUE -> BLUE .)
+
+
+state 58
+
+    (18) COLOR_VALUE -> YELLOW .
+
+    SEPARATOR       reduce using rule 18 (COLOR_VALUE -> YELLOW .)
+    SQUAREBRACKET_CLOSE reduce using rule 18 (COLOR_VALUE -> YELLOW .)
+
+
+state 59
+
+    (19) COLOR_VALUE -> BLACK .
+
+    SEPARATOR       reduce using rule 19 (COLOR_VALUE -> BLACK .)
+    SQUAREBRACKET_CLOSE reduce using rule 19 (COLOR_VALUE -> BLACK .)
+
+
+state 60
+
+    (20) COLOR_VALUE -> WHITE .
+
+    SEPARATOR       reduce using rule 20 (COLOR_VALUE -> WHITE .)
+    SQUAREBRACKET_CLOSE reduce using rule 20 (COLOR_VALUE -> WHITE .)
+
+
+state 61
+
+    (27) ATTRIBUTE -> WIDTH AFFECTATION NUMBER .
+
+    SEPARATOR       reduce using rule 27 (ATTRIBUTE -> WIDTH AFFECTATION NUMBER .)
+    SQUAREBRACKET_CLOSE reduce using rule 27 (ATTRIBUTE -> WIDTH AFFECTATION NUMBER .)
+
+
+state 62
+
+    (28) ATTRIBUTE -> HEIGHT AFFECTATION NUMBER .
+
+    SEPARATOR       reduce using rule 28 (ATTRIBUTE -> HEIGHT AFFECTATION NUMBER .)
+    SQUAREBRACKET_CLOSE reduce using rule 28 (ATTRIBUTE -> HEIGHT AFFECTATION NUMBER .)
+
