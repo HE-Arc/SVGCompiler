@@ -5,7 +5,7 @@ import AST
 precedence = (
 	('left', 'INTEGER_MINUS'),
 	('left', 'INTEGER_PLUS'),
-	('left', 'INTEGER_DIVIDE),
+	('left', 'INTEGER_DIVIDE'),
 	('left', 'INTEGER_TIMES'),
 
 	('left', 'BOOL_OR'),
@@ -129,7 +129,7 @@ def p_value_number_boolean(p):
 	'''VALUE : ABSTRACT_SHAPE
 	| INT_EXPRESSION
 	| BOOL_EXPRESSION'''
-	
+
 #  ____  _        _                            _
 # / ___|| |_ __ _| |_ ___ _ __ ___   ___ _ __ | |_
 # \___ \| __/ _` | __/ _ \ '_ ` _ \ / _ \ '_ \| __|
@@ -205,7 +205,7 @@ def p_bool_expression_number(p):
 
 def p_bool_expression_op(p):
 	'''BOOL_EXPRESSION : BOOL_EXPRESSION BOOL_EQUAL BOOL_EXPRESSION
-	| BOOL_EXPRESSION NOT_EQUAL BOOL_EXPRESSION
+	| BOOL_EXPRESSION BOOL_NOT_EQUAL BOOL_EXPRESSION
 	| BOOL_EXPRESSION BOOL_AND BOOL_EXPRESSION
 	| BOOL_EXPRESSION BOOL_OR BOOL_EXPRESSION'''
 	p[0] = AST.OpNode(p[2], [p[1], p[3]])
@@ -224,20 +224,20 @@ def p_ifs(p):
 	| IF_STATEMENT ELSE_IF_STATEMENTS ELSE_STATEMENT'''
 
 def p_if(p):
-	'''IF_STATEMENT : IF BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE BLOCK'''
+	'''IF_STATEMENT : IF BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE PROGRAM'''
 
 def p_elseifs(p):
 	'''ELSE_IF_STATEMENTS : ELSE_IF_STATEMENT
 	| ELSE_IF_STATEMENTS ELSE_IF_STATEMENT'''
 
 def p_elseif(p):
-	'''ELSE_IF_STATEMENT : ELSEIF BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE BLOCK'''
+	'''ELSE_IF_STATEMENT : ELSEIF BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE PROGRAM'''
 
 def p_else(p):
-	'''ELSE_STATEMENT : ELSE BLOCK'''
+	'''ELSE_STATEMENT : ELSE PROGRAM'''
 
 def p_while(p):
-	'''WHILE_STATEMENT : WHILE BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE BLOCK'''
+	'''WHILE_STATEMENT : WHILE BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE PROGRAM'''
 
 def p_error(p):
 	print("Syntax error in line %d" % p.lineno)

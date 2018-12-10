@@ -85,8 +85,6 @@ def t_NUMBER(t):
 	t.value = int(t.value)
 	return t
 
-t_BOOL_VALUE = r'true|false'
-
 t_SHAPE_TYPE = r'circle|triangle|rectangle'
 
 t_COMMENT = r'//.*\n'
@@ -113,7 +111,6 @@ tokens = (
 
 	'QUOTE',
 
-	'BOOL_VALUE',
 	'SHAPE_TYPE',
 
 
@@ -121,6 +118,8 @@ tokens = (
 	'INTEGER_MINUS',
 	'INTEGER_TIMES',
 	'INTEGER_DIVIDE',
+
+	'BOOL_NOT',
 
 	'BOOL_OR',
 	'BOOL_AND',
