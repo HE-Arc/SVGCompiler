@@ -3,6 +3,22 @@ from lexemes import tokens
 import AST
 
 precedence = (
+	('left', 'INTEGER_MINUS'),
+	('left', 'INTEGER_PLUS'),
+	('left', 'INTEGER_DIVIDE),
+	('left', 'INTEGER_TIMES'),
+
+	('left', 'BOOL_OR'),
+	('left', 'BOOL_AND'),
+
+	('left', 'BOOL_EQUAL'),
+	('left', 'BOOL_NOT_EQUAL'),
+
+	('left', 'BOOL_LT'),
+	('left', 'BOOL_GT'),
+
+	('right', 'UNARYNUMBER'),
+	('right', 'UNARYBOOL'),
 )
 
 def p_expression_statement(p):
@@ -11,11 +27,8 @@ def p_expression_statement(p):
 def p_programme_revursive(p):
 	'''PROGRAM : STATEMENT LINE_BREAK PROGRAM'''
 
-def p_value_number_boolean(p):
-	'''VALUE : ABSTRACT_SHAPE
-	| NUMBER
-	| TRUE
-	| FALSE'''
+def p_block(p):
+	'''PROGRAM : BRACE_OPEN PROGRAM BRACE_CLOSE'''
 
 #  ____  _
 # / ___|| |__   __ _ _ __   ___
@@ -25,21 +38,21 @@ def p_value_number_boolean(p):
 #                   |_|
 
 def p_value_shape(p):
-	'''ABSTRACT_SHAPE : SQUAREBRACKET_OPEN SHAPECONTENT SQUAREBRACKET_CLOSE'''
+	'''ABSTRACT_SHAPE : SQUAREBRACKET_OPEN SHAPE_CONTENT SQUAREBRACKET_CLOSE'''
 
 def p_shape_content(p):
-	'''SHAPECONTENT : CIRCLECONTENT
-	| TRIANGLECONTENT
-	| RECTANGLECONTENT'''
+	'''SHAPE_CONTENT : CIRCLE_CONTENT
+	| TRIANGLE_CONTENT
+	| RECTANGLE_CONTENT'''
 
 def p_circle_content(p):
-	'''CIRCLECONTENT : CIRCLE DESCRIPTION ATTRIBUTES'''
+	'''CIRCLE_CONTENT : CIRCLE DESCRIPTION ATTRIBUTES'''
 
 def p_triangle_content(p):
-	'''TRIANGLECONTENT : TRIANGLE DESCRIPTION ATTRIBUTES'''
+	'''TRIANGLE_CONTENT : TRIANGLE DESCRIPTION ATTRIBUTES'''
 
 def p_rectangle_content(p):
-	'''RECTANGLECONTENT : RECTANGLE DESCRIPTION ATTRIBUTES'''
+	'''RECTANGLE_CONTENT : RECTANGLE DESCRIPTION ATTRIBUTES'''
 
 #   ____      _
 #  / ___|___ | | ___  _ __
@@ -112,11 +125,119 @@ def p_declaration_integer(p):
 def p_declaration_shape(p):
 	'''VARIABLE : SHAPE VARIABLE_NAME'''
 
+def p_value_number_boolean(p):
+	'''VALUE : ABSTRACT_SHAPE
+	| INT_EXPRESSION
+	| BOOL_EXPRESSION'''
+	
+#  ____  _        _                            _
+# / ___|| |_ __ _| |_ ___ _ __ ___   ___ _ __ | |_
+# \___ \| __/ _` | __/ _ \ '_ ` _ \ / _ \ '_ \| __|
+#  ___) | || (_| | ||  __/ | | | | |  __/ | | | |_
+# |____/ \__\__,_|\__\___|_| |_| |_|\___|_| |_|\__|
+
 def p_statement_affetation(p):
 	'''STATEMENT : VARIABLE AFFECTATION VALUE'''
 
 def p_statement_draw(p):
 	'''STATEMENT : DRAW ABSTRACT_SHAPE'''
+
+def p_statement_structure(p):
+	'''STATEMENT : IF_STATEMENTS
+	| WHILE_STATEMENT'''
+
+#  ___       _          _         _ _   _                    _   _
+# |_ _|_ __ | |_       / \   _ __(_) |_| |__  _ __ ___   ___| |_(_) ___
+#  | || '_ \| __|     / _ \ | '__| | __| '_ \| '_ ` _ \ / _ \ __| |/ __|
+#  | || | | | |_     / ___ \| |  | | |_| | | | | | | | |  __/ |_| | (__
+# |___|_| |_|\__|___/_/   \_\_|  |_|\__|_| |_|_| |_| |_|\___|\__|_|\___|
+#              |_____|
+
+def p_int_expression_unary(p):
+	'INT_EXPRESSION : INTEGER_MINUS INT_EXPRESSION %prec UNARYNUMBER'
+	p[0] = AST.OpNode(p[1], [p[2]])
+
+def p_int_expression_bracket(p):
+	'INT_EXPRESSION : BRACKET_OPEN INT_EXPRESSION BRACKET_CLOSE'
+	p[0] = p[2]
+
+def p_int_expression_number(p):
+	'''INT_EXPRESSION : NUMBER
+	| VARIABLE'''
+	# Test si varaible est integer
+
+def p_int_expression_op(p):
+	'''INT_EXPRESSION : INT_EXPRESSION INTEGER_PLUS INT_EXPRESSION
+	| INT_EXPRESSION INTEGER_MINUS INT_EXPRESSION
+	| INT_EXPRESSION INTEGER_TIMES INT_EXPRESSION
+	| INT_EXPRESSION INTEGER_DIVIDE INT_EXPRESSION'''
+	p[0] = AST.OpNode(p[2], [p[1], p[3]])
+
+def p_int_bool_expression_op(p):
+	'''BOOL_EXPRESSION : INT_EXPRESSION BOOL_LT INT_EXPRESSION
+	| INT_EXPRESSION BOOL_GT INT_EXPRESSION
+	| INT_EXPRESSION BOOL_EQUAL INT_EXPRESSION
+	| INT_EXPRESSION BOOL_NOT_EQUAL INT_EXPRESSION'''
+
+#  ____              _        _         _ _   _                    _   _
+# | __ )  ___   ___ | |      / \   _ __(_) |_| |__  _ __ ___   ___| |_(_) ___
+# |  _ \ / _ \ / _ \| |     / _ \ | '__| | __| '_ \| '_ ` _ \ / _ \ __| |/ __|
+# | |_) | (_) | (_) | |    / ___ \| |  | | |_| | | | | | | | |  __/ |_| | (__
+# |____/ \___/ \___/|_|___/_/   \_\_|  |_|\__|_| |_|_| |_| |_|\___|\__|_|\___|
+#                    |_____|
+
+def p_bool_expression_unary(p):
+	'BOOL_EXPRESSION : BOOL_NOT BOOL_EXPRESSION %prec UNARYBOOL'
+	p[0] = AST.OpNode(p[1], [p[2]])
+
+def p_bool_expression_bracket(p):
+	'BOOL_EXPRESSION : BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE'
+	p[0] = p[2]
+
+def p_bool_value(p):
+	'''BOOL_VALUE : TRUE
+	| FALSE'''
+
+def p_bool_expression_number(p):
+	'''BOOL_EXPRESSION : BOOL_VALUE
+	| VARIABLE'''
+	# Test si varaible est boolean
+
+def p_bool_expression_op(p):
+	'''BOOL_EXPRESSION : BOOL_EXPRESSION BOOL_EQUAL BOOL_EXPRESSION
+	| BOOL_EXPRESSION NOT_EQUAL BOOL_EXPRESSION
+	| BOOL_EXPRESSION BOOL_AND BOOL_EXPRESSION
+	| BOOL_EXPRESSION BOOL_OR BOOL_EXPRESSION'''
+	p[0] = AST.OpNode(p[2], [p[1], p[3]])
+
+#  ____  _                   _
+# / ___|| |_ _ __ _   _  ___| |_ _   _ _ __ ___
+# \___ \| __| '__| | | |/ __| __| | | | '__/ _ \
+#  ___) | |_| |  | |_| | (__| |_| |_| | | |  __/
+# |____/ \__|_|   \__,_|\___|\__|\__,_|_|  \___|
+
+
+def p_ifs(p):
+	'''IF_STATEMENTS : IF_STATEMENT
+	| IF_STATEMENT ELSE_STATEMENT
+	| IF_STATEMENT ELSE_IF_STATEMENTS
+	| IF_STATEMENT ELSE_IF_STATEMENTS ELSE_STATEMENT'''
+
+def p_if(p):
+	'''IF_STATEMENT : IF BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE BLOCK'''
+
+def p_elseifs(p):
+	'''ELSE_IF_STATEMENTS : ELSE_IF_STATEMENT
+	| ELSE_IF_STATEMENTS ELSE_IF_STATEMENT'''
+
+def p_elseif(p):
+	'''ELSE_IF_STATEMENT : ELSEIF BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE BLOCK'''
+
+def p_else(p):
+	'''ELSE_STATEMENT : ELSE BLOCK'''
+
+def p_while(p):
+	'''WHILE_STATEMENT : WHILE BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE BLOCK'''
 
 def p_error(p):
 	print("Syntax error in line %d" % p.lineno)

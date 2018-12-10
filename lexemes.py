@@ -69,6 +69,7 @@ t_INTEGER_TIMES = r'\*'
 t_INTEGER_DIVIDE = r'/'
 
 # Boolean Arithmetic
+t_BOOL_NOT = r'!'
 t_BOOL_OR = r'\|\|'
 t_BOOL_AND = r'&&'
 t_BOOL_LT = r'<'
