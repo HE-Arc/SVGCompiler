@@ -23,12 +23,16 @@ precedence = (
 
 def p_expression_statement(p):
 	'''PROGRAM : STATEMENT'''
+	p[0]=p[1]
 
 def p_programme_revursive(p):
 	'''PROGRAM : STATEMENT LINE_BREAK PROGRAM'''
+	p[0]=p[2]
+
 
 def p_block(p):
 	'''PROGRAM : BRACE_OPEN PROGRAM BRACE_CLOSE'''
+	p[0]=p[2]
 
 #  ____  _
 # / ___|| |__   __ _ _ __   ___
@@ -39,20 +43,25 @@ def p_block(p):
 
 def p_value_shape(p):
 	'''ABSTRACT_SHAPE : SQUAREBRACKET_OPEN SHAPE_CONTENT SQUAREBRACKET_CLOSE'''
+	p[0]=p[2]
 
 def p_shape_content(p):
 	'''SHAPE_CONTENT : CIRCLE_CONTENT
 	| TRIANGLE_CONTENT
 	| RECTANGLE_CONTENT'''
+	p[0]=p[1]
 
 def p_circle_content(p):
 	'''CIRCLE_CONTENT : CIRCLE DESCRIPTION ATTRIBUTES'''
+	#faut mettre noeud
 
 def p_triangle_content(p):
 	'''TRIANGLE_CONTENT : TRIANGLE DESCRIPTION ATTRIBUTES'''
+	#faut mettre noeud
 
 def p_rectangle_content(p):
 	'''RECTANGLE_CONTENT : RECTANGLE DESCRIPTION ATTRIBUTES'''
+	#faut mettre noeud
 
 #   ____      _
 #  / ___|___ | | ___  _ __
@@ -62,24 +71,31 @@ def p_rectangle_content(p):
 
 def p_colorvalue_colorhex(p):
 	'''COLOR_VALUE : COLOR_HEX'''
+	p[0]=p[1]
 
 def p_colorvalue_red(p):
 	'''COLOR_VALUE : RED'''
+	p[0]='#ff0000'
 
 def p_colorvalue_green(p):
 	'''COLOR_VALUE : GREEN'''
+	p[0]='#00ff00'
 
 def p_colorvalue_blue(p):
 	'''COLOR_VALUE : BLUE'''
+	p[0]='#0000ff'
 
 def p_colorvalue_yellow(p):
 	'''COLOR_VALUE : YELLOW'''
+	p[0]='#ffff00'
 
 def p_colorvalue_black(p):
 	'''COLOR_VALUE : BLACK'''
+	p[0]='#000000'
 
 def p_colorvalue_white(p):
 	'''COLOR_VALUE : WHITE'''
+	p[0]='#ffffff'
 
 #     _   _   _        _ _           _
 #    / \ | |_| |_ _ __(_) |__  _   _| |_ ___
