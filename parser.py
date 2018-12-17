@@ -21,16 +21,13 @@ precedence = (
     ('right', 'UNARYBOOL'),
 )
 
-
 def p_expression_statement(p):
     '''PROGRAM : STATEMENT'''
-    p[0] = p[1]
+    p[0] = AST.ProgramNode(p[1])
 
-
-def p_programme_revursive(p):
+def p_programme_recursive(p):
     '''PROGRAM : STATEMENT LINE_BREAK PROGRAM'''
-    p[0] = p[2]
-
+    p[0] = AST.ProgramNode([p[1]] + p[3].children)
 
 def p_block(p):
     '''PROGRAM : BRACE_OPEN PROGRAM BRACE_CLOSE'''
@@ -117,21 +114,17 @@ def p_colorvalue_white(p):
 #  / ___ \ |_| |_| |  | | |_) | |_| | ||  __/
 # /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
 
+def p_attribute(p):
+    '''ATTRIBUTES : ATTRIBUTE'''
+    p[0] = [p[1]]
 
 def p_attributes(p):
     '''ATTRIBUTES : ATTRIBUTE SEPARATOR ATTRIBUTES'''
-    p[0] = AST.AttributesNode(p[1].children + p[3].children)
-
-
-def p_attribute(p):
-    '''ATTRIBUTES : ATTRIBUTE'''
-    p[0] = p[1]
-
+    p[0] = [p[1]] + p[3]
 
 def p_attribute_radius(p):
     '''ATTRIBUTE : RADIUS AFFECTATION NUMBER'''
     p[0] = AST.RadiusNode(p[3])
-
 
 def p_attribute_positionX(p):
     '''ATTRIBUTE : POSITIONX AFFECTATION NUMBER'''
@@ -191,11 +184,9 @@ def p_value_number_boolean(p):
 #  ___) | || (_| | ||  __/ | | | | |  __/ | | | |_
 # |____/ \__\__,_|\__\___|_| |_| |_|\___|_| |_|\__|
 
-
-def p_statement_affetation(p):
-    '''STATEMENT : VARIABLE AFFECTATION VALUE'''
-    p[0] = AST.AffectationNode(p[1], p[3])
-
+# def p_statement_affetation(p):
+#     '''STATEMENT : VARIABLE AFFECTATION VALUE'''
+#     p[0] = AST.AffectationNode(p[1], p[3])
 
 def p_statement_draw(p):
     '''STATEMENT : DRAW ABSTRACT_SHAPE'''
@@ -322,17 +313,11 @@ def p_else(p):
 def p_while(p):
     '''WHILE_STATEMENT : WHILE BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE PROGRAM'''
 
-
-def p_error(p):
-    #print("Syntax error in line %d" % p.lineno)
-    yacc.errok()
-
-
 yacc.yacc(outputdir='.')
 
 
 def parse(program):
-    return yacc.parse(program)
+    return yacc.parse(program, debug=False)
 
 
 if __name__ == '__main__':

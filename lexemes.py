@@ -140,7 +140,7 @@ tokens = (
 lex.lex()
 
 if __name__=="__main__":
-	fileName="testLex.phsvg"
+	fileName="testLex2.phsvg"
 	lex.input(open(fileName).read())
 
 	while 1:

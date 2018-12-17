@@ -146,8 +146,6 @@ class RectangleNode(Node):
 
 
 class DeclarationNode(Node):
-    type = 'declaration'
-
     def __init__(self, variableType, variableName):
         Node.__init__(self, variableName)
         self.variableType = variableType
@@ -156,8 +154,6 @@ class DeclarationNode(Node):
         return "Declare :" + repr(self.variableType)
 
 class AffectationNode(Node):
-    type = 'declaration'
-
     def __init__(self, variableName, value):
         Node.__init__(self, value)
         self.variableName = variableName
@@ -172,34 +168,28 @@ class AffectationNode(Node):
 #    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
 
 class ShapeNode(Node):
-    type = 'shape'
-
     def __init__(self, tok):
         Node.__init__(self)
         self.tok = tok
 
     def __repr__(self):
-        return type + ":" + repr(self.tok)
+        return "shape :" + repr(self.tok)
 
 class IntegerNode(Node):
-    type = 'integer'
-
     def __init__(self, tok):
         Node.__init__(self)
         self.tok = tok
 
     def __repr__(self):
-        return type + ":" + repr(self.tok)
+        return "integer :" + repr(self.tok)
 
 class BooleanNode(Node):
-    type = 'boolean'
-
     def __init__(self, tok):
         Node.__init__(self)
         self.tok = tok
 
     def __repr__(self):
-        return type + ":" + repr(self.tok)
+        return "boolean :" + repr(self.tok)
 
 #     _   _   _        _ _           _
 #    / \ | |_| |_ _ __(_) |__  _   _| |_ ___
@@ -208,78 +198,64 @@ class BooleanNode(Node):
 # /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
 
 class AttributesNode(Node):
-    type = 'attributes'
-
     def __init__(self, children=None):
         Node.__init__(self,children)
 
     def __repr__(self):
-        return type 
+        return 'attributes'
 
 class ColorNode(Node):
-    type = 'color'
-
     def __init__(self, tok):
         Node.__init__(self)
         self.tok = tok
 
     def __repr__(self):
-        return type + ":" + repr(self.tok)
+        return "color :" + repr(self.tok)
 
 
 class RadiusNode(Node):
-    type = 'radius'
-
     def __init__(self, tok):
         Node.__init__(self)
         self.tok = tok
 
     def __repr__(self):
-        return type + ":" + repr(self.tok)
+        return "radius :" + repr(self.tok)
 
 
 class PositionXNode(Node):
-    type = 'positionX'
-
     def __init__(self, tok):
         Node.__init__(self)
         self.tok = tok
 
     def __repr__(self):
-        return type + ":" + repr(self.tok)
+        return 'positionX' + repr(self.tok)
 
 
 class PositionYNode(Node):
-    type = 'positionY'
-
     def __init__(self, tok):
         Node.__init__(self)
         self.tok = tok
 
     def __repr__(self):
-        return type + ":" + repr(self.tok)
+        return "positionY :" + repr(self.tok)
 
 
 class WidthNode(Node):
-    type = 'width'
-
     def __init__(self, tok):
         Node.__init__(self)
         self.tok = tok
 
     def __repr__(self):
-        return type + ":" + repr(self.tok)
+        return "width :" + repr(self.tok)
 
 
 class HeightNode(Node):
-    type = 'height'
-
     def __init__(self, tok):
         Node.__init__(self)
         self.tok = tok
 
     def __repr__(self):
-        return type + ":" + repr(self.tok)
+        return "height :" + repr(self.tok)
 
 
 class OpNode(Node):
