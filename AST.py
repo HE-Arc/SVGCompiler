@@ -104,6 +104,70 @@ class TokenNode(Node):
     def __repr__(self):
         return repr(self.tok)
 
+class ColorNode(Node):
+    type = 'color'
+    def __init__(self, tok):
+        Node.__init__(self)
+        self.tok = tok
+
+    def __repr__(self):
+        return repr(self.tok)
+
+
+class ShapeNode(Node):
+    type = 'shape'
+    def __init__(self, tok):
+        Node.__init__(self)
+        self.tok = tok
+
+    def __repr__(self):
+        return repr(self.tok)
+
+class RadiusNode(Node):
+    type = 'radius'
+    def __init__(self, tok):
+        Node.__init__(self)
+        self.tok = tok
+
+    def __repr__(self):
+        return repr(self.tok)
+
+class PositionXNode(Node):
+    type = 'positionX'
+    def __init__(self, tok):
+        Node.__init__(self)
+        self.tok = tok
+
+    def __repr__(self):
+        return repr(self.tok)
+
+class PositionYNode(Node):
+    type = 'positionY'
+    def __init__(self, tok):
+        Node.__init__(self)
+        self.tok = tok
+
+    def __repr__(self):
+        return repr(self.tok)
+
+class WidthNode(Node):
+    type = 'width'
+    def __init__(self, tok):
+        Node.__init__(self)
+        self.tok = tok
+
+    def __repr__(self):
+        return repr(self.tok)
+
+class HeightNode(Node):
+    type = 'height'
+    def __init__(self, tok):
+        Node.__init__(self)
+        self.tok = tok
+
+    def __repr__(self):
+        return repr(self.tok)
+
 class OpNode(Node):
     def __init__(self, op, children):
         Node.__init__(self,children)
