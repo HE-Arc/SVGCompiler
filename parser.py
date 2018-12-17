@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import ply.yacc as yacc
 from lexemes import tokens
 import AST
