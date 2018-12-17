@@ -290,3 +290,6 @@ if __name__ == '__main__':
 	prog = open(sys.argv[1]).read()
 	result = parse(prog)
 	print(result)
+	graph = result.makegraphicaltree()
+	name = os.path.splitext(sys.argv[1])[0]+'-ast.pdf'
+	graph.write_pdf(name)
