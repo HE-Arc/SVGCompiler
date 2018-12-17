@@ -104,6 +104,21 @@ class TokenNode(Node):
     def __repr__(self):
         return repr(self.tok)
 
+class CircleNode(Node):
+    type = 'circle'
+    def __init__(self, attr):
+        Node.__init__(self, attr)
+
+class TriangleNode(Node):
+    type = 'triangle'
+    def __init__(self, attr):
+        Node.__init__(self, attr)
+
+class RectangleNode(Node):
+    type = 'rectangle'
+    def __init__(self, attr):
+        Node.__init__(self, attr)
+
 class OpNode(Node):
     def __init__(self, op, children):
         Node.__init__(self,children)

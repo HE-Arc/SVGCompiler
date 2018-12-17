@@ -53,15 +53,15 @@ def p_shape_content(p):
 
 def p_circle_content(p):
 	'''CIRCLE_CONTENT : CIRCLE DESCRIPTION ATTRIBUTES'''
-	#faut mettre noeud
+	p[0] = AST.CircleNode(p[3])
 
 def p_triangle_content(p):
 	'''TRIANGLE_CONTENT : TRIANGLE DESCRIPTION ATTRIBUTES'''
-	#faut mettre noeud
+	p[0] = AST.TriangleNode(p[3])
 
 def p_rectangle_content(p):
 	'''RECTANGLE_CONTENT : RECTANGLE DESCRIPTION ATTRIBUTES'''
-	#faut mettre noeud
+	p[0] = AST.RectangleNode(p[3])
 
 #   ____      _
 #  / ___|___ | | ___  _ __
@@ -104,9 +104,13 @@ def p_colorvalue_white(p):
 # /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
 
 
+def p_attributes(p):
+	'''ATTRIBUTES : ATTRIBUTE SEPARATOR ATTRIBUTES'''
+	
+
 def p_attribute(p):
-	'''ATTRIBUTES : ATTRIBUTE SEPARATOR ATTRIBUTES
-	| ATTRIBUTE'''
+	'''ATTRIBUTES : ATTRIBUTE'''
+
 
 def p_attribute_radius(p):
 	'''ATTRIBUTE : RADIUS AFFECTATION NUMBER'''
