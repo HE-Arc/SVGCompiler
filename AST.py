@@ -116,6 +116,14 @@ class TokenNode(Node):
         return repr(self.tok)
 
 
+#  ____  _
+# / ___|| |__   __ _ _ __   ___
+# \___ \| '_ \ / _` | '_ \ / _ \
+#  ___) | | | | (_| | |_) |  __/
+# |____/|_| |_|\__,_| .__/ \___|
+#                   |_|
+
+
 class CircleNode(Node):
     type = 'circle'
 
@@ -136,9 +144,14 @@ class RectangleNode(Node):
     def __init__(self, attr):
         Node.__init__(self, attr)
 
+# __     __         _       _     _
+# \ \   / /_ _ _ __(_) __ _| |__ | | ___  ___
+#  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \/ __|
+#   \ V / (_| | |  | | (_| | |_) | |  __/\__ \
+#    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
 
-class ColorNode(Node):
-    type = 'color'
+class ShapeNode(Node):
+    type = 'shape'
 
     def __init__(self, tok):
         Node.__init__(self)
@@ -147,9 +160,34 @@ class ColorNode(Node):
     def __repr__(self):
         return type + ":" + repr(self.tok)
 
+class IntegerNode(Node):
+    type = 'integer'
 
-class ShapeNode(Node):
-    type = 'shape'
+    def __init__(self, tok):
+        Node.__init__(self)
+        self.tok = tok
+
+    def __repr__(self):
+        return type + ":" + repr(self.tok)
+
+class BooleanNode(Node):
+    type = 'boolean'
+
+    def __init__(self, tok):
+        Node.__init__(self)
+        self.tok = tok
+
+    def __repr__(self):
+        return type + ":" + repr(self.tok)
+
+#     _   _   _        _ _           _
+#    / \ | |_| |_ _ __(_) |__  _   _| |_ ___
+#   / _ \| __| __| '__| | '_ \| | | | __/ _ \
+#  / ___ \ |_| |_| |  | | |_) | |_| | ||  __/
+# /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
+
+class ColorNode(Node):
+    type = 'color'
 
     def __init__(self, tok):
         Node.__init__(self)
