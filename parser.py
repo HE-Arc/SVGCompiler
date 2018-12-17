@@ -313,8 +313,12 @@ def p_else(p):
 def p_while(p):
     '''WHILE_STATEMENT : WHILE BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE PROGRAM'''
 
-yacc.yacc(outputdir='.')
+yacc.yacc(outputdir='./generated')
 
+def p_error(p):
+    print(p)
+    print("Syntax error in line %d" % p.lineno)
+    yacc.yacc().errok()
 
 def parse(program):
     return yacc.parse(program, debug=False)
@@ -327,6 +331,6 @@ if __name__ == '__main__':
     prog = open(sys.argv[1]).read()
     result = parse(prog)
     print(result)
-    # graph = result.makegraphicaltree()
-    # name = os.path.splitext(sys.argv[1])[0] + '-ast.pdf'
-    # graph.write_pdf(name)
+    graph = result.makegraphicaltree()
+    name = os.path.splitext(sys.argv[1])[0] + '-ast.pdf'
+    graph.write_pdf(name)
