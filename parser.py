@@ -106,30 +106,35 @@ def p_colorvalue_white(p):
 
 def p_attributes(p):
 	'''ATTRIBUTES : ATTRIBUTE SEPARATOR ATTRIBUTES'''
-
+	p[0]=AST.AttributesNode(p[1]+p[3])
 
 def p_attribute(p):
 	'''ATTRIBUTES : ATTRIBUTE'''
-
+	p[0]=p[1]
 
 def p_attribute_radius(p):
 	'''ATTRIBUTE : RADIUS AFFECTATION NUMBER'''
+	p[0]=AST.RadiusNode(p[3])
 
 def p_attribute_positionX(p):
-	'''ATTRIBUTE: POSITIONX AFFECTATION NUMBER'''
+	'''ATTRIBUTE : POSITIONX AFFECTATION NUMBER'''
+	p[0]=AST.PositionXNode(p[3])
 
 def p_attribute_positionY(p):
-	'''ATTRIBUTE: POSITIONY AFFECTATION NUMBER'''
+	'''ATTRIBUTE : POSITIONY AFFECTATION NUMBER'''
+	p[0]=AST.PositionYNode(p[3])
 
 def p_attribute_color(p):
-	'''ATTRIBUTE: COLOR AFFECTATION COLOR_VALUE'''
+	'''ATTRIBUTE : COLOR AFFECTATION COLOR_VALUE'''
+	p[0]=AST.ColorNode(p[3])
 
 def p_attribute_width(p):
-	'''ATTRIBUTE: WIDTH AFFECTATION NUMBER'''
+	'''ATTRIBUTE : WIDTH AFFECTATION NUMBER'''
+	p[0]=AST.WidthNode(p[3])
 
 def p_attribute_height(p):
-	'''ATTRIBUTE: HEIGHT AFFECTATION
- NUMBER'''
+	'''ATTRIBUTE : HEIGHT AFFECTATION NUMBER'''
+	p[0]=AST.HeightNode(p[3])
 
 # __     __         _       _     _
 # \ \   / /_ _ _ __(_) __ _| |__ | | ___  ___

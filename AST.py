@@ -207,6 +207,15 @@ class BooleanNode(Node):
 #  / ___ \ |_| |_| |  | | |_) | |_| | ||  __/
 # /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
 
+class AttributesNode(Node):
+    type = 'attributes'
+
+    def __init__(self, children=None):
+        Node.__init__(self,children)
+
+    def __repr__(self):
+        return type 
+
 class ColorNode(Node):
     type = 'color'
 
