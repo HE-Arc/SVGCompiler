@@ -111,7 +111,7 @@ class ColorNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return repr(self.tok)
+        return type+":"+repr(self.tok)
 
 
 class ShapeNode(Node):
@@ -121,7 +121,7 @@ class ShapeNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return repr(self.tok)
+        return type+":"+repr(self.tok)
 
 class RadiusNode(Node):
     type = 'radius'
@@ -130,7 +130,7 @@ class RadiusNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return repr(self.tok)
+        return type+":"+repr(self.tok)
 
 class PositionXNode(Node):
     type = 'positionX'
@@ -139,7 +139,7 @@ class PositionXNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return repr(self.tok)
+        return  type+":"+repr(self.tok)
 
 class PositionYNode(Node):
     type = 'positionY'
@@ -148,7 +148,7 @@ class PositionYNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return repr(self.tok)
+        return  type+":"+repr(self.tok)
 
 class WidthNode(Node):
     type = 'width'
@@ -157,7 +157,7 @@ class WidthNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return repr(self.tok)
+        return  type+":"+repr(self.tok)
 
 class HeightNode(Node):
     type = 'height'
@@ -166,7 +166,7 @@ class HeightNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return repr(self.tok)
+        return type+":"+repr(self.tok)
 
 class OpNode(Node):
     def __init__(self, op, children):
