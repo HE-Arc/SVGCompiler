@@ -144,17 +144,21 @@ def p_attribute_height(p):
 
 def p_declaration_boolean(p):
 	'''VARIABLE : BOOLEAN VARIABLE_NAME'''
+	p[0] = AST.DeclarationNode(p[1], p[2])
 
 def p_declaration_integer(p):
 	'''VARIABLE : INTEGER VARIABLE_NAME'''
+	p[0] = AST.DeclarationNode(p[1], p[2])
 
 def p_declaration_shape(p):
 	'''VARIABLE : SHAPE VARIABLE_NAME'''
+	p[0] = AST.DeclarationNode(p[1], p[2])
 
 def p_value_number_boolean(p):
 	'''VALUE : ABSTRACT_SHAPE
 	| INT_EXPRESSION
 	| BOOL_EXPRESSION'''
+	p[0] = p[1]
 
 #  ____  _        _                            _
 # / ___|| |_ __ _| |_ ___ _ __ ___   ___ _ __ | |_
@@ -164,9 +168,11 @@ def p_value_number_boolean(p):
 
 def p_statement_affetation(p):
 	'''STATEMENT : VARIABLE AFFECTATION VALUE'''
+	p[0] = AST.AffectationNode(p[1], p[3])
 
 def p_statement_draw(p):
 	'''STATEMENT : DRAW ABSTRACT_SHAPE'''
+	p[0] = AST.DrawNode(p[2])
 
 def p_statement_structure(p):
 	'''STATEMENT : IF_STATEMENTS
@@ -190,7 +196,10 @@ def p_int_expression_bracket(p):
 def p_int_expression_number(p):
 	'''INT_EXPRESSION : NUMBER
 	| VARIABLE'''
-	# Test si varaible est integer
+	if p[1] is AST.IntegerNode:
+		p[0] = p[1]
+	else:
+		raise Exception("Invalide type")
 
 def p_int_expression_op(p):
 	'''INT_EXPRESSION : INT_EXPRESSION INTEGER_PLUS INT_EXPRESSION
@@ -204,6 +213,7 @@ def p_int_bool_expression_op(p):
 	| INT_EXPRESSION BOOL_GT INT_EXPRESSION
 	| INT_EXPRESSION BOOL_EQUAL INT_EXPRESSION
 	| INT_EXPRESSION BOOL_NOT_EQUAL INT_EXPRESSION'''
+	p[0] = AST.OpNode(p[2], [p[1], p[3]])
 
 #  ____              _        _         _ _   _                    _   _
 # | __ )  ___   ___ | |      / \   _ __(_) |_| |__  _ __ ___   ___| |_(_) ___
@@ -223,11 +233,15 @@ def p_bool_expression_bracket(p):
 def p_bool_value(p):
 	'''BOOL_VALUE : TRUE
 	| FALSE'''
+	p[0] = AST.BooleanNode(p[1])
 
 def p_bool_expression_number(p):
 	'''BOOL_EXPRESSION : BOOL_VALUE
 	| VARIABLE'''
-	# Test si varaible est boolean
+	if p[1] is AST.BooleanNode:
+		p[0] = p[1]
+	else:
+		raise Exception("Invalide type")
 
 def p_bool_expression_op(p):
 	'''BOOL_EXPRESSION : BOOL_EXPRESSION BOOL_EQUAL BOOL_EXPRESSION

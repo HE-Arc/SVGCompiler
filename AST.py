@@ -144,6 +144,27 @@ class RectangleNode(Node):
     def __init__(self, attr):
         Node.__init__(self, attr)
 
+
+class DeclarationNode(Node):
+    type = 'declaration'
+
+    def __init__(self, variableType, variableName):
+        Node.__init__(self, variableName)
+        self.variableType = variableType
+
+    def __repr__(self):
+        return "Declare :" + repr(self.variableType)
+
+class AffectationNode(Node):
+    type = 'declaration'
+
+    def __init__(self, variableName, value):
+        Node.__init__(self, value)
+        self.variableName = variableName
+
+    def __repr__(self):
+        return "Affect :" + repr(self.variableName)
+
 # __     __         _       _     _
 # \ \   / /_ _ _ __(_) __ _| |__ | | ___  ___
 #  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \/ __|
