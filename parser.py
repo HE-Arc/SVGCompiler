@@ -7,7 +7,7 @@ import AST
 
 precedence = (
     ('left', 'INTEGER_MINUS'),
-    ('left', 'INTEGER_PLUS'),
+    ('right', 'INTEGER_PLUS'),
     ('left', 'INTEGER_DIVIDE'),
     ('left', 'INTEGER_TIMES'),
 
@@ -152,17 +152,17 @@ def p_attributes(p):
 
 
 def p_attribute_radius(p):
-    '''ATTRIBUTE : RADIUS AFFECTATION NUMBER'''
+    '''ATTRIBUTE : RADIUS AFFECTATION EXPRESSION'''
     p[0] = AST.RadiusNode(p[3])
 
 
 def p_attribute_positionX(p):
-    '''ATTRIBUTE : POSITIONX AFFECTATION NUMBER'''
+    '''ATTRIBUTE : POSITIONX AFFECTATION EXPRESSION'''
     p[0] = AST.PositionXNode(p[3])
 
 
 def p_attribute_positionY(p):
-    '''ATTRIBUTE : POSITIONY AFFECTATION NUMBER'''
+    '''ATTRIBUTE : POSITIONY AFFECTATION EXPRESSION'''
     p[0] = AST.PositionYNode(p[3])
 
 
@@ -172,31 +172,13 @@ def p_attribute_color(p):
 
 
 def p_attribute_width(p):
-    '''ATTRIBUTE : WIDTH AFFECTATION NUMBER'''
+    '''ATTRIBUTE : WIDTH AFFECTATION EXPRESSION'''
     p[0] = AST.WidthNode(p[3])
 
 
 def p_attribute_height(p):
-    '''ATTRIBUTE : HEIGHT AFFECTATION NUMBER'''
+    '''ATTRIBUTE : HEIGHT AFFECTATION EXPRESSION'''
     p[0] = AST.HeightNode(p[3])
-
-# __     __         _       _     _
-# \ \   / /_ _ _ __(_) __ _| |__ | | ___  ___
-#  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \/ __|
-#   \ V / (_| | |  | | (_| | |_) | |  __/\__ \
-#    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
-
-
-def p_declaration_integer(p):
-    '''STATEMENT : INTEGER VARIABLE_NAME
-    | SHAPE VARIABLE_NAME
-    | BOOLEAN VARIABLE_NAME'''
-    p[0] = AST.DeclarationNode(p[1], p[2])
-
-
-def p_statement_affetation(p):
-    '''STATEMENT : VARIABLE_NAME AFFECTATION EXPRESSION'''
-    p[0] = AST.AffectationNode(p[1], p[3])
 
 #  ____  _        _                            _
 # / ___|| |_ __ _| |_ ___ _ __ ___   ___ _ __ | |_
@@ -230,7 +212,7 @@ def p_int_expression_number(p):
 def p_expression_unaryOperation(p):
     '''EXPRESSION : INTEGER_MINUS EXPRESSION %prec UNARYNUMBER
     | BOOL_NOT EXPRESSION %prec UNARYBOOL'''
-    p[0] = AST.UnaryOperation(p[1], p[2])
+    p[0] = AST.UnaryOperation(p[1], [p[2]])
 
 
 def p_expression_binaryOperation(p):
@@ -265,6 +247,37 @@ def p_expression_true(p):
 def p_expression_false(p):
     '''EXPRESSION : FALSE'''
     p[0] = AST.TokenNode(False)
+
+
+# __     __         _       _     _
+# \ \   / /_ _ _ __(_) __ _| |__ | | ___  ___
+#  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \/ __|
+#   \ V / (_| | |  | | (_| | |_) | |  __/\__ \
+#    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
+
+
+def p_statement_declaration(p):
+    '''STATEMENT : BOOLEAN VARIABLE_NAME
+    | INTEGER VARIABLE_NAME
+    | SHAPE VARIABLE_NAME'''
+    p[0] = AST.DeclarationNode(p[1], p[2])
+
+def p_statement_affetation(p):
+    '''STATEMENT : VARIABLE_NAME AFFECTATION EXPRESSION'''
+    p[0] = AST.AffectationNode(p[1], p[3])
+
+def p_statement_affetation_declaration(p):
+    '''STATEMENT : BOOLEAN VARIABLE_NAME AFFECTATION EXPRESSION
+    | INTEGER VARIABLE_NAME AFFECTATION EXPRESSION
+    | SHAPE VARIABLE_NAME AFFECTATION EXPRESSION'''
+    declaration = AST.DeclarationNode(p[1], p[2])
+    affectation = AST.AffectationNode(p[2], p[4])
+    # micro program for the shorthand
+    p[0] = AST.ProgramNode([declaration, affectation])
+
+def p_temp(p):
+    '''STATEMENT : EXPRESSION'''
+    p[0] = p[1]
 
 #  ____  _                   _
 # / ___|| |_ _ __ _   _  ___| |_ _   _ _ __ ___

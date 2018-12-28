@@ -33,3 +33,6 @@ while (true && false)
 //	content;
 // }
 // comment
+@ [circle: radius=1, positionX=2, positionY=3, color=red];
+@ [rectangle: width=4, height=5, positionX=6, positionY=7, color=green];
+@ [triangle: width=8, height=9, positionX=10, positionY=11, color=blue]

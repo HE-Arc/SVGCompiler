@@ -154,22 +154,18 @@ class VariableNode(Node):
 
 class DeclarationNode(Node):
     def __init__(self, variableType, variableName):
-        Node.__init__(self)
-        self.variableName = variableName
-        self.variableType = variableType
+        Node.__init__(self, [TokenNode(variableType), TokenNode(variableName)])
 
     def __repr__(self):
-        return "Declare : " + repr(self.variableType) + " " + self.variableName
+        return "Declare"
 
 
 class AffectationNode(Node):
     def __init__(self, variableName, value):
-        Node.__init__(self)
-        self.variableName = variableName
-        self.value = value
+        Node.__init__(self, [TokenNode(variableName), value])
 
     def __repr__(self):
-        return "Affect : " + repr(self.variableName) + " " + repr(self.value)
+        return "Affectation"
 
 #     _   _   _        _ _           _
 #    / \ | |_| |_ _ __(_) |__  _   _| |_ ___
@@ -246,7 +242,7 @@ class UnaryOperation(Node):
         self.operation = operation
 
     def __repr__(self):
-        return "%s" % (self.operation)
+        return "UnaryOp : " + self.operation
 
 class BinaryOperation(Node):
     def __init__(self, operation, operande):
@@ -254,8 +250,7 @@ class BinaryOperation(Node):
         self.operation = operation
 
     def __repr__(self):
-        return "%s" % (self.operation)
-
+        return "BinaryOp : " + self.operation
 
 class DrawNode(Node):
     type = 'draw'

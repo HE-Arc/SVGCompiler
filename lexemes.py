@@ -70,7 +70,7 @@ t_INTEGER_DIVIDE = r'/'
 
 # Boolean Arithmetic
 t_BOOL_NOT = r'!'
-t_BOOL_OR = r'\|\|'
+t_BOOL_OR = r"\|\|"
 t_BOOL_AND = r'&&'
 t_BOOL_LT = r'<'
 t_BOOL_GT = r'>'
@@ -87,8 +87,11 @@ def t_NUMBER(t):
 
 t_SHAPE_TYPE = r'circle|triangle|rectangle'
 
-t_COMMENT = r'//.*\n'
-t_ignore = ' |\t|\n'
+# useful ! : https://stackoverflow.com/a/29595453/9263555
+# i wasted a ton of time because i tried to put all in t_ignore with a single regex with pipes
+t_ignore_comments = r'//.*\n'
+t_ignore_linebreak = r'\n'
+t_ignore_spaces = r'\s'
 
 def t_error(t):
 	print("Illegal character '%s'" % t.value[0])
