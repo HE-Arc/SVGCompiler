@@ -67,31 +67,16 @@ def p_block(p):
 #                   |_|
 
 
-def p_value_shape(p):
-    '''ABSTRACT_SHAPE : SQUAREBRACKET_OPEN SHAPE_CONTENT SQUAREBRACKET_CLOSE'''
-    p[0] = p[2]
+def p_expression_shape(p):
+    '''EXPRESSION : SQUAREBRACKET_OPEN SHAPE_TYPE DESCRIPTION ATTRIBUTES SQUAREBRACKET_CLOSE'''
+    p[0] = AST.ShapeNode(p[2], p[4])
 
 
-def p_shape_content(p):
-    '''SHAPE_CONTENT : CIRCLE_CONTENT
-    | TRIANGLE_CONTENT
-    | RECTANGLE_CONTENT'''
+def p_shapetype(p):
+    '''SHAPE_TYPE : CIRCLE
+    | TRIANGLE
+    | RECTANGLE'''
     p[0] = p[1]
-
-
-def p_circle_content(p):
-    '''CIRCLE_CONTENT : CIRCLE DESCRIPTION ATTRIBUTES'''
-    p[0] = AST.CircleNode(p[3])
-
-
-def p_triangle_content(p):
-    '''TRIANGLE_CONTENT : TRIANGLE DESCRIPTION ATTRIBUTES'''
-    p[0] = AST.TriangleNode(p[3])
-
-
-def p_rectangle_content(p):
-    '''RECTANGLE_CONTENT : RECTANGLE DESCRIPTION ATTRIBUTES'''
-    p[0] = AST.RectangleNode(p[3])
 
 #   ____      _
 #  / ___|___ | | ___  _ __
@@ -188,7 +173,7 @@ def p_attribute_height(p):
 
 
 def p_statement_draw(p):
-    '''STATEMENT : DRAW ABSTRACT_SHAPE'''
+    '''STATEMENT : DRAW EXPRESSION'''
     p[0] = AST.DrawNode(p[2])
 
 

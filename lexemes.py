@@ -85,8 +85,6 @@ def t_NUMBER(t):
 	t.value = int(t.value)
 	return t
 
-t_SHAPE_TYPE = r'circle|triangle|rectangle'
-
 # useful ! : https://stackoverflow.com/a/29595453/9263555
 # i wasted a ton of time because i tried to put all in t_ignore with a single regex with pipes
 t_ignore_comments = r'//.*\n'
@@ -113,9 +111,6 @@ tokens = (
 	'SQUAREBRACKET_CLOSE',
 
 	'QUOTE',
-
-	'SHAPE_TYPE',
-
 
 	'INTEGER_PLUS',
 	'INTEGER_MINUS',

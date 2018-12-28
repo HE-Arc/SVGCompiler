@@ -123,26 +123,13 @@ class TokenNode(Node):
 # |____/|_| |_|\__,_| .__/ \___|
 #                   |_|
 
-
-class CircleNode(Node):
-    type = 'circle'
-
-    def __init__(self, attr):
+class ShapeNode(Node):
+    def __init__(self, shapetype, attr):
         Node.__init__(self, attr)
+        self.shapetype = shapetype
 
-
-class TriangleNode(Node):
-    type = 'triangle'
-
-    def __init__(self, attr):
-        Node.__init__(self, attr)
-
-
-class RectangleNode(Node):
-    type = 'rectangle'
-
-    def __init__(self, attr):
-        Node.__init__(self, attr)
+    def __repr__(self):
+        return self.shapetype
 
 class VariableNode(Node):
     def __init__(self, variableName):
@@ -173,22 +160,13 @@ class AffectationNode(Node):
 #  / ___ \ |_| |_| |  | | |_) | |_| | ||  __/
 # /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
 
-
-class AttributesNode(Node):
-    def __init__(self, children=None):
-        Node.__init__(self, children)
-
-    def __repr__(self):
-        return 'attributes'
-
-
 class ColorNode(Node):
     def __init__(self, tok):
         Node.__init__(self)
         self.tok = tok
 
     def __repr__(self):
-        return "color :" + repr(self.tok)
+        return "color : " + repr(self.tok)
 
 
 class RadiusNode(Node):
@@ -197,7 +175,7 @@ class RadiusNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return "radius :" + repr(self.tok)
+        return "radius : " + repr(self.tok)
 
 
 class PositionXNode(Node):
@@ -206,7 +184,7 @@ class PositionXNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return 'positionX' + repr(self.tok)
+        return "positionX : " + repr(self.tok)
 
 
 class PositionYNode(Node):
@@ -215,7 +193,7 @@ class PositionYNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return "positionY :" + repr(self.tok)
+        return "positionY : " + repr(self.tok)
 
 
 class WidthNode(Node):
@@ -224,7 +202,7 @@ class WidthNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return "width :" + repr(self.tok)
+        return "width : " + repr(self.tok)
 
 
 class HeightNode(Node):
@@ -233,7 +211,7 @@ class HeightNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return "height :" + repr(self.tok)
+        return "height : " + repr(self.tok)
 
 
 class UnaryOperation(Node):

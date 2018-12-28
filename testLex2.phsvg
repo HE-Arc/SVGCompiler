@@ -1,4 +1,6 @@
 integer $i1 = 1;
 //boolean $b1 = true || false;
-boolean $b3 = !false
+boolean $b3 = !false && $b1;
 //asd s
+shape $s = [rectangle: width=4, height=$i1, positionX=6, positionY=7, color=green];
+@ $s
