@@ -4,45 +4,46 @@
 import ply.lex as lex
 
 reserved_words = (
-	"if",
-	"elseif",
-	"else",
-	"while",
-	"for",
+    "if",
+    "elseif",
+    "else",
+    "while",
 
-	"boolean",
-	"integer",
-	"shape",
+    "boolean",
+    "integer",
+    "shape",
 
-	"circle",
-	"triangle",
-	"rectangle",
+    "circle",
+    "triangle",
+    "rectangle",
 
-	"true",
-	"false",
+    "true",
+    "false",
 
-	"radius",
-	"positionX",
-	"positionY",
-	"height",
-	"width",
+    "radius",
+    "positionX",
+    "positionY",
+    "height",
+    "width",
 
-	"color",
-	"red",
-	"green",
-	"blue",
-	"yellow",
-	"black",
-	"white"
+    "color",
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "black",
+    "white"
 )
 
+
 def t_KEYWORD(t):
-	r'[A-Za-z_]\w*'
-	if t.value in reserved_words:
-		t.type = t.value.upper()
-		return t
-	else:
-		return t_error(t)
+    r'[A-Za-z_]\w*'
+    if t.value in reserved_words:
+        t.type = t.value.upper()
+        return t
+    else:
+        return t_error(t)
+
 
 # Separators
 t_LINE_BREAK = r';'
@@ -80,10 +81,12 @@ t_BOOL_NOT_EQUAL = r'!='
 # Values
 t_COLOR_HEX = r'\#[0-9A-Fa-f]{6}'
 
+
 def t_NUMBER(t):
-	r'\d+'
-	t.value = int(t.value)
-	return t
+    r'\d+'
+    t.value = int(t.value)
+    return t
+
 
 # useful ! : https://stackoverflow.com/a/29595453/9263555
 # i wasted a ton of time because i tried to put all in t_ignore with a single regex with pipes
@@ -91,58 +94,56 @@ t_ignore_comments = r'//.*\n'
 t_ignore_linebreak = r'\n'
 t_ignore_spaces = r'\s'
 
+
 def t_error(t):
-	print("Illegal character '%s'" % t.value[0])
-	t.lexer.skip(1)
+    print("Illegal character '%s'" % t.value[0])
+    t.lexer.skip(1)
+
 
 tokens = (
-	'COMMENT',
-	'ignore',
-	'LINE_BREAK',
-	'SEPARATOR',
-	'AFFECTATION',
-	'DESCRIPTION',
+    'LINE_BREAK',
+    'SEPARATOR',
+    'AFFECTATION',
+    'DESCRIPTION',
 
-	'BRACE_OPEN',
-	'BRACE_CLOSE',
-	'BRACKET_OPEN',
-	'BRACKET_CLOSE',
-	'SQUAREBRACKET_OPEN',
-	'SQUAREBRACKET_CLOSE',
+    'BRACE_OPEN',
+    'BRACE_CLOSE',
+    'BRACKET_OPEN',
+    'BRACKET_CLOSE',
+    'SQUAREBRACKET_OPEN',
+    'SQUAREBRACKET_CLOSE',
 
-	'QUOTE',
+    'INTEGER_PLUS',
+    'INTEGER_MINUS',
+    'INTEGER_TIMES',
+    'INTEGER_DIVIDE',
 
-	'INTEGER_PLUS',
-	'INTEGER_MINUS',
-	'INTEGER_TIMES',
-	'INTEGER_DIVIDE',
+    'BOOL_NOT',
 
-	'BOOL_NOT',
+    'BOOL_OR',
+    'BOOL_AND',
+    'BOOL_LT',
+    'BOOL_GT',
+    'BOOL_EQUAL',
+    'BOOL_NOT_EQUAL',
 
-	'BOOL_OR',
-	'BOOL_AND',
-	'BOOL_LT',
-	'BOOL_GT',
-	'BOOL_EQUAL',
-	'BOOL_NOT_EQUAL',
+    'COLOR_HEX',
 
-	'COLOR_HEX',
+    'DRAW',
 
-	'DRAW',
+    'VARIABLE_NAME',
 
-	'VARIABLE_NAME',
-
-	'NUMBER',
+    'NUMBER',
 ) + tuple(map(lambda s: s.upper(), reserved_words))
 
 lex.lex()
 
-if __name__=="__main__":
-	fileName="testLex2.phsvg"
-	lex.input(open(fileName).read())
+if __name__ == "__main__":
+    fileName = "testLex2.phsvg"
+    lex.input(open(fileName).read())
 
-	while 1:
-		tok=lex.token()
-		if not tok:
-			break
-		print (f"Line {tok.lineno}: {tok.type} ({tok.value})")
+    while 1:
+        tok = lex.token()
+        if not tok:
+            break
+        print(f"Line {tok.lineno}: {tok.type} ({tok.value})")

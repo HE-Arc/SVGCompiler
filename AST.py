@@ -131,6 +131,7 @@ class ShapeNode(Node):
     def __repr__(self):
         return self.shapetype
 
+
 class VariableNode(Node):
     def __init__(self, variableName):
         Node.__init__(self)
@@ -139,12 +140,13 @@ class VariableNode(Node):
     def __repr__(self):
         return self.variableName
 
+
 class DeclarationNode(Node):
     def __init__(self, variableType, variableName):
         Node.__init__(self, [TokenNode(variableType), TokenNode(variableName)])
 
     def __repr__(self):
-        return "Declare"
+        return "Declaration"
 
 
 class AffectationNode(Node):
@@ -159,6 +161,7 @@ class AffectationNode(Node):
 #   / _ \| __| __| '__| | '_ \| | | | __/ _ \
 #  / ___ \ |_| |_| |  | | |_) | |_| | ||  __/
 # /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
+
 
 class ColorNode(Node):
     def __init__(self, tok):
@@ -222,6 +225,7 @@ class UnaryOperation(Node):
     def __repr__(self):
         return "UnaryOp : " + self.operation
 
+
 class BinaryOperation(Node):
     def __init__(self, operation, operande):
         Node.__init__(self, operande)
@@ -229,6 +233,7 @@ class BinaryOperation(Node):
 
     def __repr__(self):
         return "BinaryOp : " + self.operation
+
 
 class DrawNode(Node):
     type = 'draw'

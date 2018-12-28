@@ -46,7 +46,7 @@ unaryOperators = (
 
 
 def p_expression_statement(p):
-    '''PROGRAM : STATEMENT'''
+    '''PROGRAM : STATEMENT LINE_BREAK'''
     p[0] = AST.ProgramNode(p[1])
 
 
@@ -247,9 +247,11 @@ def p_statement_declaration(p):
     | SHAPE VARIABLE_NAME'''
     p[0] = AST.DeclarationNode(p[1], p[2])
 
+
 def p_statement_affetation(p):
     '''STATEMENT : VARIABLE_NAME AFFECTATION EXPRESSION'''
     p[0] = AST.AffectationNode(p[1], p[3])
+
 
 def p_statement_affetation_declaration(p):
     '''STATEMENT : BOOLEAN VARIABLE_NAME AFFECTATION EXPRESSION
@@ -259,6 +261,7 @@ def p_statement_affetation_declaration(p):
     affectation = AST.AffectationNode(p[2], p[4])
     # micro program for the shorthand
     p[0] = AST.ProgramNode([declaration, affectation])
+
 
 def p_temp(p):
     '''STATEMENT : EXPRESSION'''
@@ -299,9 +302,6 @@ def p_while(p):
     '''WHILE_STATEMENT : WHILE BRACKET_OPEN EXPRESSION BRACKET_CLOSE PROGRAM'''
 
 
-yacc.yacc(outputdir='./generated')
-
-
 def p_error(p):
     print(p)
     print("Syntax error in line %d" % p.lineno)
@@ -315,6 +315,8 @@ def parse(program):
 if __name__ == '__main__':
     import sys
     import os
+
+    yacc.yacc(outputdir='./generated')
 
     prog = open(sys.argv[1]).read()
     result = parse(prog)
