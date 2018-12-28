@@ -1,4 +1,0 @@
-integer $i1 = 1;
-boolean $b3 = !false && $b1;
-shape $s = [rectangle: width=4, height=$i1, positionX=6, positionY=7, color=green];
-@ $s;

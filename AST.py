@@ -100,13 +100,15 @@ class Node:
             graph.add_edge(edge)
         return graph
 
-
 class ProgramNode(Node):
     type = 'Program'
 
+class BlockNode(Node):
+    type = 'Block'
+
 
 class TokenNode(Node):
-    type = 'token'
+    type = 'Token'
 
     def __init__(self, tok):
         Node.__init__(self)
@@ -239,9 +241,12 @@ class DrawNode(Node):
     type = 'draw'
 
 
-class WhileNode(Node):
-    type = 'while'
+class IfNode(Node):
+    def __init__(self, conditionProgram, trueProgram, falseProgram = TokenNode("a")):
+        Node.__init__(self, [conditionProgram, trueProgram, falseProgram])
 
+    def __repr__(self):
+        return "If"
 
 class EntryNode(Node):
     type = 'ENTRY'

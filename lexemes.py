@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import ply.lex as lex
+import sys
 
 reserved_words = (
     "if",
@@ -139,8 +140,8 @@ tokens = (
 lex.lex()
 
 if __name__ == "__main__":
-    fileName = "testLex2.phsvg"
-    lex.input(open(fileName).read())
+    prog = open(sys.argv[1]).read()
+    lex.input(prog)
 
     while 1:
         tok = lex.token()

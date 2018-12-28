@@ -4,10 +4,12 @@
 import ply.yacc as yacc
 from lexemes import tokens
 import AST
+import sys
+import os
 
 precedence = (
     ('left', 'INTEGER_MINUS'),
-    ('right', 'INTEGER_PLUS'),
+    ('left', 'INTEGER_PLUS'),
     ('left', 'INTEGER_DIVIDE'),
     ('left', 'INTEGER_TIMES'),
 
@@ -45,19 +47,22 @@ unaryOperators = (
 )
 
 
-def p_expression_statement(p):
-    '''PROGRAM : STATEMENT LINE_BREAK'''
-    p[0] = AST.ProgramNode(p[1])
 
+def p_a(p):
+    '''ABSTRACT_STATEMENT : STATEMENT LINE_BREAK'''
+    p[0] = [p[1]]
 
-def p_programme_recursive(p):
-    '''PROGRAM : STATEMENT LINE_BREAK PROGRAM'''
-    p[0] = AST.ProgramNode([p[1]] + p[3].children)
+def p_b(p):
+    '''ABSTRACT_STATEMENT : ABSTRACT_STATEMENT ABSTRACT_STATEMENT'''
+    p[0] = p[1] + p[2]
 
+def p_c(p):
+    '''ABSTRACT_STATEMENT : BRACE_OPEN ABSTRACT_STATEMENT BRACE_CLOSE'''
+    p[0] = [AST.BlockNode(p[2])]
 
-def p_block(p):
-    '''PROGRAM : BRACE_OPEN PROGRAM BRACE_CLOSE'''
-    p[0] = p[2]
+def p_d(p):
+    '''ABSTRACT_STATEMENT : IF BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT'''
+    p[0] = [AST.IfNode(p[3], p[5])]
 
 #  ____  _
 # / ___|| |__   __ _ _ __   ___
@@ -176,11 +181,6 @@ def p_statement_draw(p):
     '''STATEMENT : DRAW EXPRESSION'''
     p[0] = AST.DrawNode(p[2])
 
-
-def p_statement_structure(p):
-    '''STATEMENT : IF_STATEMENTS
-    | WHILE_STATEMENT'''
-
 #  _____                              _
 # | ____|_  ___ __  _ __ ___  ___ ___(_) ___  _ __
 # |  _| \ \/ / '_ \| '__/ _ \/ __/ __| |/ _ \| '_ \
@@ -263,7 +263,7 @@ def p_statement_affetation_declaration(p):
     p[0] = AST.ProgramNode([declaration, affectation])
 
 
-def p_temp(p):
+def p_useless_expression(p):
     '''STATEMENT : EXPRESSION'''
     p[0] = p[1]
 
@@ -274,53 +274,25 @@ def p_temp(p):
 # |____/ \__|_|   \__,_|\___|\__|\__,_|_|  \___|
 
 
-def p_ifs(p):
-    '''IF_STATEMENTS : IF_STATEMENT
-    | IF_STATEMENT ELSE_STATEMENT
-    | IF_STATEMENT ELSE_IF_STATEMENTS
-    | IF_STATEMENT ELSE_IF_STATEMENTS ELSE_STATEMENT'''
-
-
-def p_if(p):
-    '''IF_STATEMENT : IF BRACKET_OPEN EXPRESSION BRACKET_CLOSE PROGRAM'''
-
-
-def p_elseifs(p):
-    '''ELSE_IF_STATEMENTS : ELSE_IF_STATEMENT
-    | ELSE_IF_STATEMENTS ELSE_IF_STATEMENT'''
-
-
-def p_elseif(p):
-    '''ELSE_IF_STATEMENT : ELSEIF BRACKET_OPEN EXPRESSION BRACKET_CLOSE PROGRAM'''
-
-
-def p_else(p):
-    '''ELSE_STATEMENT : ELSE PROGRAM'''
-
-
-def p_while(p):
-    '''WHILE_STATEMENT : WHILE BRACKET_OPEN EXPRESSION BRACKET_CLOSE PROGRAM'''
-
-
 def p_error(p):
-    print(p)
-    print("Syntax error in line %d" % p.lineno)
+    print("Parsing Error : ", p)
     yacc.yacc().errok()
 
 
 def parse(program):
-    return yacc.parse(program, debug=False)
+    # mini-hack to enable to declare a parent block (JSON like for the program)
+    return AST.ProgramNode(yacc.parse(program, debug=False)[0].children)
 
+
+yacc.yacc(outputdir='./generated')
 
 if __name__ == '__main__':
-    import sys
-    import os
-
-    yacc.yacc(outputdir='./generated')
-
     prog = open(sys.argv[1]).read()
-    result = parse(prog)
-    print(result)
-    graph = result.makegraphicaltree()
-    name = os.path.splitext(sys.argv[1])[0] + '-ast.pdf'
-    graph.write_pdf(name)
+    tree = parse(prog)
+
+    if tree != None:
+        print("arbre :")
+        print(tree)
+        graph = tree.makegraphicaltree()
+        name = os.path.splitext(sys.argv[1])[0] + '-ast.pdf'
+        graph.write_pdf(name)
