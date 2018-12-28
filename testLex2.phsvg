@@ -1,2 +1,16 @@
-@ [circle: radius=10, positionX=10, positionY=10, color=red];
-@ [circle: radius=10, positionX=10, positionY=10, color=red]
+boolean $b1;
+boolean $b2;
+
+integer $i1;
+integer $i2;
+
+$b1 = true;
+$i1 = 100;
+
+$b1 = $i1;
+
+$b1 = (true && false);
+
+@ [circle: radius=1, positionX=2, positionY=3, color=red];
+@ [rectangle: width=4, height=5, positionX=6, positionY=7, color=green];
+@ [triangle: width=8, height=9, positionX=10, positionY=11, color=blue]

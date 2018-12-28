@@ -113,7 +113,7 @@ class TokenNode(Node):
         self.tok = tok
 
     def __repr__(self):
-        return repr(self.tok)
+        return repr(str(self.tok))
 
 
 #  ____  _
@@ -144,52 +144,32 @@ class RectangleNode(Node):
     def __init__(self, attr):
         Node.__init__(self, attr)
 
-
-class DeclarationNode(Node):
-    def __init__(self, variableType, variableName):
-        Node.__init__(self, variableName)
-        self.variableType = variableType
-
-    def __repr__(self):
-        return "Declare :" + repr(self.variableType)
-
-class AffectationNode(Node):
-    def __init__(self, variableName, value):
-        Node.__init__(self, value)
+class VariableNode(Node):
+    def __init__(self, variableName):
+        Node.__init__(self)
         self.variableName = variableName
 
     def __repr__(self):
-        return "Affect :" + repr(self.variableName)
+        return self.variableName
 
-# __     __         _       _     _
-# \ \   / /_ _ _ __(_) __ _| |__ | | ___  ___
-#  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \/ __|
-#   \ V / (_| | |  | | (_| | |_) | |  __/\__ \
-#    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
-
-class ShapeNode(Node):
-    def __init__(self, tok):
+class DeclarationNode(Node):
+    def __init__(self, variableType, variableName):
         Node.__init__(self)
-        self.tok = tok
+        self.variableName = variableName
+        self.variableType = variableType
 
     def __repr__(self):
-        return "shape :" + repr(self.tok)
+        return "Declare : " + repr(self.variableType) + " " + self.variableName
 
-class IntegerNode(Node):
-    def __init__(self, tok):
+
+class AffectationNode(Node):
+    def __init__(self, variableName, value):
         Node.__init__(self)
-        self.tok = tok
+        self.variableName = variableName
+        self.value = value
 
     def __repr__(self):
-        return "integer :" + repr(self.tok)
-
-class BooleanNode(Node):
-    def __init__(self, tok):
-        Node.__init__(self)
-        self.tok = tok
-
-    def __repr__(self):
-        return "boolean :" + repr(self.tok)
+        return "Affect : " + repr(self.variableName) + " " + repr(self.value)
 
 #     _   _   _        _ _           _
 #    / \ | |_| |_ _ __(_) |__  _   _| |_ ___
@@ -197,12 +177,14 @@ class BooleanNode(Node):
 #  / ___ \ |_| |_| |  | | |_) | |_| | ||  __/
 # /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
 
+
 class AttributesNode(Node):
     def __init__(self, children=None):
-        Node.__init__(self,children)
+        Node.__init__(self, children)
 
     def __repr__(self):
         return 'attributes'
+
 
 class ColorNode(Node):
     def __init__(self, tok):
@@ -258,21 +240,21 @@ class HeightNode(Node):
         return "height :" + repr(self.tok)
 
 
-class OpNode(Node):
-    def __init__(self, op, children):
-        Node.__init__(self, children)
-        self.op = op
-        try:
-            self.nbargs = len(children)
-        except AttributeError:
-            self.nbargs = 1
+class UnaryOperation(Node):
+    def __init__(self, operation, operande):
+        Node.__init__(self, operande)
+        self.operation = operation
 
     def __repr__(self):
-        return "%s (%s)" % (self.op, self.nbargs)
+        return "%s" % (self.operation)
 
+class BinaryOperation(Node):
+    def __init__(self, operation, operande):
+        Node.__init__(self, operande)
+        self.operation = operation
 
-class AssignNode(Node):
-    type = '='
+    def __repr__(self):
+        return "%s" % (self.operation)
 
 
 class DrawNode(Node):

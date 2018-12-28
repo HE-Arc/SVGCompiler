@@ -24,13 +24,36 @@ precedence = (
     ('right', 'UNARYBOOL'),
 )
 
+binaryOperators = (
+    "INTEGER_DIVIDE"
+    "INTEGER_TIMES"
+    "INTEGER_MINUS"
+    "INTEGER_PLUS"
+    "BOOL_EQUAL"
+    "BOOL_NOT_EQUAL"
+    "BOOL_AND"
+    "BOOL_OR"
+    "BOOL_LT"
+    "BOOL_GT"
+    "BOOL_EQUAL"
+    "BOOL_NOT_EQUAL"
+)
+
+unaryOperators = (
+    "INTEGER_MINUS"
+    "BOOL_NOT"
+)
+
+
 def p_expression_statement(p):
     '''PROGRAM : STATEMENT'''
     p[0] = AST.ProgramNode(p[1])
 
+
 def p_programme_recursive(p):
     '''PROGRAM : STATEMENT LINE_BREAK PROGRAM'''
     p[0] = AST.ProgramNode([p[1]] + p[3].children)
+
 
 def p_block(p):
     '''PROGRAM : BRACE_OPEN PROGRAM BRACE_CLOSE'''
@@ -117,17 +140,21 @@ def p_colorvalue_white(p):
 #  / ___ \ |_| |_| |  | | |_) | |_| | ||  __/
 # /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
 
+
 def p_attribute(p):
     '''ATTRIBUTES : ATTRIBUTE'''
     p[0] = [p[1]]
+
 
 def p_attributes(p):
     '''ATTRIBUTES : ATTRIBUTE SEPARATOR ATTRIBUTES'''
     p[0] = [p[1]] + p[3]
 
+
 def p_attribute_radius(p):
     '''ATTRIBUTE : RADIUS AFFECTATION NUMBER'''
     p[0] = AST.RadiusNode(p[3])
+
 
 def p_attribute_positionX(p):
     '''ATTRIBUTE : POSITIONX AFFECTATION NUMBER'''
@@ -160,26 +187,16 @@ def p_attribute_height(p):
 #    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
 
 
-def p_declaration_boolean(p):
-    '''VARIABLE : BOOLEAN VARIABLE_NAME'''
-    p[0] = AST.DeclarationNode(p[1], p[2])
-
-
 def p_declaration_integer(p):
-    '''VARIABLE : INTEGER VARIABLE_NAME'''
+    '''STATEMENT : INTEGER VARIABLE_NAME
+    | SHAPE VARIABLE_NAME
+    | BOOLEAN VARIABLE_NAME'''
     p[0] = AST.DeclarationNode(p[1], p[2])
 
 
-def p_declaration_shape(p):
-    '''VARIABLE : SHAPE VARIABLE_NAME'''
-    p[0] = AST.DeclarationNode(p[1], p[2])
-
-
-def p_value_number_boolean(p):
-    '''VALUE : ABSTRACT_SHAPE
-    | INT_EXPRESSION
-    | BOOL_EXPRESSION'''
-    p[0] = p[1]
+def p_statement_affetation(p):
+    '''STATEMENT : VARIABLE_NAME AFFECTATION EXPRESSION'''
+    p[0] = AST.AffectationNode(p[1], p[3])
 
 #  ____  _        _                            _
 # / ___|| |_ __ _| |_ ___ _ __ ___   ___ _ __ | |_
@@ -187,9 +204,6 @@ def p_value_number_boolean(p):
 #  ___) | || (_| | ||  __/ | | | | |  __/ | | | |_
 # |____/ \__\__,_|\__\___|_| |_| |_|\___|_| |_|\__|
 
-# def p_statement_affetation(p):
-#     '''STATEMENT : VARIABLE AFFECTATION VALUE'''
-#     p[0] = AST.AffectationNode(p[1], p[3])
 
 def p_statement_draw(p):
     '''STATEMENT : DRAW ABSTRACT_SHAPE'''
@@ -200,87 +214,57 @@ def p_statement_structure(p):
     '''STATEMENT : IF_STATEMENTS
     | WHILE_STATEMENT'''
 
-#  ___       _          _         _ _   _                    _   _
-# |_ _|_ __ | |_       / \   _ __(_) |_| |__  _ __ ___   ___| |_(_) ___
-#  | || '_ \| __|     / _ \ | '__| | __| '_ \| '_ ` _ \ / _ \ __| |/ __|
-#  | || | | | |_     / ___ \| |  | | |_| | | | | | | | |  __/ |_| | (__
-# |___|_| |_|\__|___/_/   \_\_|  |_|\__|_| |_|_| |_| |_|\___|\__|_|\___|
-#              |_____|
-
-
-def p_int_expression_unary(p):
-    'INT_EXPRESSION : INTEGER_MINUS INT_EXPRESSION %prec UNARYNUMBER'
-    p[0] = AST.OpNode(p[1], [p[2]])
-
-
-def p_int_expression_bracket(p):
-    'INT_EXPRESSION : BRACKET_OPEN INT_EXPRESSION BRACKET_CLOSE'
-    p[0] = p[2]
+#  _____                              _
+# | ____|_  ___ __  _ __ ___  ___ ___(_) ___  _ __
+# |  _| \ \/ / '_ \| '__/ _ \/ __/ __| |/ _ \| '_ \
+# | |___ >  <| |_) | | |  __/\__ \__ \ | (_) | | | |
+# |_____/_/\_\ .__/|_|  \___||___/___/_|\___/|_| |_|
+#            |_|
 
 
 def p_int_expression_number(p):
-    '''INT_EXPRESSION : NUMBER
-    | VARIABLE'''
-    if p[1] is AST.IntegerNode:
-        p[0] = p[1]
-    else:
-        raise Exception("Invalide type")
+    '''EXPRESSION : VARIABLE_NAME'''
+    p[0] = AST.VariableNode(p[1])
 
 
-def p_int_expression_op(p):
-    '''INT_EXPRESSION : INT_EXPRESSION INTEGER_PLUS INT_EXPRESSION
-    | INT_EXPRESSION INTEGER_MINUS INT_EXPRESSION
-    | INT_EXPRESSION INTEGER_TIMES INT_EXPRESSION
-    | INT_EXPRESSION INTEGER_DIVIDE INT_EXPRESSION'''
-    p[0] = AST.OpNode(p[2], [p[1], p[3]])
+def p_expression_unaryOperation(p):
+    '''EXPRESSION : INTEGER_MINUS EXPRESSION %prec UNARYNUMBER
+    | BOOL_NOT EXPRESSION %prec UNARYBOOL'''
+    p[0] = AST.UnaryOperation(p[1], p[2])
 
 
-def p_int_bool_expression_op(p):
-    '''BOOL_EXPRESSION : INT_EXPRESSION BOOL_LT INT_EXPRESSION
-    | INT_EXPRESSION BOOL_GT INT_EXPRESSION
-    | INT_EXPRESSION BOOL_EQUAL INT_EXPRESSION
-    | INT_EXPRESSION BOOL_NOT_EQUAL INT_EXPRESSION'''
-    p[0] = AST.OpNode(p[2], [p[1], p[3]])
-
-#  ____              _        _         _ _   _                    _   _
-# | __ )  ___   ___ | |      / \   _ __(_) |_| |__  _ __ ___   ___| |_(_) ___
-# |  _ \ / _ \ / _ \| |     / _ \ | '__| | __| '_ \| '_ ` _ \ / _ \ __| |/ __|
-# | |_) | (_) | (_) | |    / ___ \| |  | | |_| | | | | | | | |  __/ |_| | (__
-# |____/ \___/ \___/|_|___/_/   \_\_|  |_|\__|_| |_|_| |_| |_|\___|\__|_|\___|
-#                    |_____|
-
-
-def p_bool_expression_unary(p):
-    'BOOL_EXPRESSION : BOOL_NOT BOOL_EXPRESSION %prec UNARYBOOL'
-    p[0] = AST.OpNode(p[1], [p[2]])
+def p_expression_binaryOperation(p):
+    '''EXPRESSION : EXPRESSION INTEGER_DIVIDE EXPRESSION
+    | EXPRESSION INTEGER_TIMES EXPRESSION
+    | EXPRESSION INTEGER_MINUS EXPRESSION
+    | EXPRESSION INTEGER_PLUS EXPRESSION
+    | EXPRESSION BOOL_EQUAL EXPRESSION
+    | EXPRESSION BOOL_NOT_EQUAL EXPRESSION
+    | EXPRESSION BOOL_AND EXPRESSION
+    | EXPRESSION BOOL_OR EXPRESSION
+    | EXPRESSION BOOL_LT EXPRESSION
+    | EXPRESSION BOOL_GT EXPRESSION'''
+    p[0] = AST.BinaryOperation(p[2], [p[1], p[3]])
 
 
-def p_bool_expression_bracket(p):
-    'BOOL_EXPRESSION : BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE'
+def p_expression_bracket(p):
+    '''EXPRESSION : BRACKET_OPEN EXPRESSION BRACKET_CLOSE'''
     p[0] = p[2]
 
 
-def p_bool_value(p):
-    '''BOOL_VALUE : TRUE
-    | FALSE'''
-    p[0] = AST.BooleanNode(p[1])
+def p_expression_number(p):
+    '''EXPRESSION : NUMBER'''
+    p[0] = AST.TokenNode(p[1])  # already converted in int in lexemes.py
 
 
-def p_bool_expression_number(p):
-    '''BOOL_EXPRESSION : BOOL_VALUE
-    | VARIABLE'''
-    if p[1] is AST.BooleanNode:
-        p[0] = p[1]
-    else:
-        raise Exception("Invalide type")
+def p_expression_true(p):
+    '''EXPRESSION : TRUE'''
+    p[0] = AST.TokenNode(True)
 
 
-def p_bool_expression_op(p):
-    '''BOOL_EXPRESSION : BOOL_EXPRESSION BOOL_EQUAL BOOL_EXPRESSION
-    | BOOL_EXPRESSION BOOL_NOT_EQUAL BOOL_EXPRESSION
-    | BOOL_EXPRESSION BOOL_AND BOOL_EXPRESSION
-    | BOOL_EXPRESSION BOOL_OR BOOL_EXPRESSION'''
-    p[0] = AST.OpNode(p[2], [p[1], p[3]])
+def p_expression_false(p):
+    '''EXPRESSION : FALSE'''
+    p[0] = AST.TokenNode(False)
 
 #  ____  _                   _
 # / ___|| |_ _ __ _   _  ___| |_ _   _ _ __ ___
@@ -297,7 +281,7 @@ def p_ifs(p):
 
 
 def p_if(p):
-    '''IF_STATEMENT : IF BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE PROGRAM'''
+    '''IF_STATEMENT : IF BRACKET_OPEN EXPRESSION BRACKET_CLOSE PROGRAM'''
 
 
 def p_elseifs(p):
@@ -306,7 +290,7 @@ def p_elseifs(p):
 
 
 def p_elseif(p):
-    '''ELSE_IF_STATEMENT : ELSEIF BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE PROGRAM'''
+    '''ELSE_IF_STATEMENT : ELSEIF BRACKET_OPEN EXPRESSION BRACKET_CLOSE PROGRAM'''
 
 
 def p_else(p):
@@ -314,14 +298,17 @@ def p_else(p):
 
 
 def p_while(p):
-    '''WHILE_STATEMENT : WHILE BRACKET_OPEN BOOL_EXPRESSION BRACKET_CLOSE PROGRAM'''
+    '''WHILE_STATEMENT : WHILE BRACKET_OPEN EXPRESSION BRACKET_CLOSE PROGRAM'''
+
 
 yacc.yacc(outputdir='./generated')
+
 
 def p_error(p):
     print(p)
     print("Syntax error in line %d" % p.lineno)
     yacc.yacc().errok()
+
 
 def parse(program):
     return yacc.parse(program, debug=False)
