@@ -100,6 +100,11 @@ class Node:
             graph.add_edge(edge)
         return graph
 
+class EntryNode(Node):
+    type = 'ENTRY'
+    def __init__(self):
+        Node.__init__(self, None)
+
 def addToClass(cls):
     """ D�corateur permettant d"ajouter la fonction d�cor�e en tant que m�thode
     � une classe.

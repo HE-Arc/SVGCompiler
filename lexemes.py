@@ -6,7 +6,6 @@ import sys
 
 reserved_words = (
     "if",
-    "elseif",
     "else",
     "while",
 

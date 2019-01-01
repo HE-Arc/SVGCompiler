@@ -328,15 +328,9 @@ def p_statement_declaration_affetation_shape(p):
 
 
 def p_useless_expression(p):
+    # allow useless expression like : > 1 + 2
     '''STATEMENT : EXPRESSION'''
     p[0] = p[1]
-
-#  ____  _                   _
-# / ___|| |_ _ __ _   _  ___| |_ _   _ _ __ ___
-# \___ \| __| '__| | | |/ __| __| | | | '__/ _ \
-#  ___) | |_| |  | |_| | (__| |_| |_| | | |  __/
-# |____/ \__|_|   \__,_|\___|\__|\__,_|_|  \___|
-
 
 def p_error(p):
     print("Parsing Error : ", p)
