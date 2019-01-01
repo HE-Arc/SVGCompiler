@@ -10,6 +10,11 @@
 - [ ] elseif -> idée d'implem : IfNode Recursives en cascade (pas urgent)
 - [ ] for -> idée d'implem : LoopNode (pas urgent)
 
+# Sementique
+- [ ] Vérification des attributs des shapes
+- [ ] Vérification des types des variables lors de l'affectations
+- [ ] Vérification des types des expressions évaluée dans les structures -> if(boolean) ok, if(integer) not ok
+
 # Threader
 - [ ] Coutures des noeuds simples
 - [ ] Couture du IfNode

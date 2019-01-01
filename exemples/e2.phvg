@@ -4,7 +4,7 @@
     $j = 2;
     while($i < 10)
     {
-        @ [circle: positionX=$i, positionY=$i, color=red];
+        @ [circle: positionX=$i, positionY=$i, color=#ff0000];
         @ [triangle: positionX=$i, positionY=$i, color=green];
         @ [rectangle: positionX=$i, positionY=$i, color=blue];
         $i = $i + 1;
