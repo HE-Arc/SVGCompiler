@@ -1,5 +1,7 @@
 {
-    integer $i = 0;
+    integer $i = 1 + 1;
+    integer $j;
+    $j = 2;
     while($i < 10)
     {
         @ [circle: positionX=$i, positionY=$i, color=red];

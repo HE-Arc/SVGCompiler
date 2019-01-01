@@ -3,7 +3,7 @@
 
 import ply.yacc as yacc
 from lexemes import tokens
-import AST
+import nodes as AST
 import sys
 import os
 
@@ -47,34 +47,59 @@ unaryOperators = (
 )
 
 
+#  ____  _        _                            _
+# / ___|| |_ __ _| |_ ___ _ __ ___   ___ _ __ | |_ ___
+# \___ \| __/ _` | __/ _ \ '_ ` _ \ / _ \ '_ \| __/ __|
+#  ___) | || (_| | ||  __/ | | | | |  __/ | | | |_\__ \
+# |____/ \__\__,_|\__\___|_| |_| |_|\___|_| |_|\__|___/
 
 def p_lines(p):
     '''ABSTRACT_STATEMENT : STATEMENT LINE_BREAK'''
     p[0] = [p[1]]
 
+
 def p_statements_recursion(p):
     '''ABSTRACT_STATEMENT : ABSTRACT_STATEMENT ABSTRACT_STATEMENT'''
     p[0] = p[1] + p[2]
+
+#  ____  _            _
+# | __ )| | ___   ___| | _____
+# |  _ \| |/ _ \ / __| |/ / __|
+# | |_) | | (_) | (__|   <\__ \
+# |____/|_|\___/ \___|_|\_\___/
+
 
 def p_block_declaration(p):
     '''ABSTRACT_STATEMENT : BRACE_OPEN ABSTRACT_STATEMENT BRACE_CLOSE'''
     p[0] = [AST.BlockNode(p[2])]
 
+
 def p_block_declaration_empty(p):
-    '''ABSTRACT_STATEMENT : BRACE_OPEN BRACE_CLOSE''' # to allow empty blocks
+    '''ABSTRACT_STATEMENT : BRACE_OPEN BRACE_CLOSE'''  # to allow empty blocks
     p[0] = []
+
+#  ____  _                   _
+# / ___|| |_ _ __ _   _  ___| |_ _   _ _ __ ___  ___
+# \___ \| __| '__| | | |/ __| __| | | | '__/ _ \/ __|
+#  ___) | |_| |  | |_| | (__| |_| |_| | | |  __/\__ \
+# |____/ \__|_|   \__,_|\___|\__|\__,_|_|  \___||___/
+
 
 def p_if(p):
     '''ABSTRACT_STATEMENT : IF BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT'''
-    p[0] = [AST.IfNode(p[3], p[5][0])] + p[5][1:] # <- only take the first ABSTRACT_STATEMENT following the expression (target block) and add the remaining list to the current return list
+    p[0] = [AST.IfNode(p[3], p[5][0])] + \
+        p[5][1:
+             ]  # <- only take the first ABSTRACT_STATEMENT following the expression (target block) and add the remaining list to the current return list
+
 
 def p_if_else(p):
     '''ABSTRACT_STATEMENT : IF BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT ELSE ABSTRACT_STATEMENT'''
-    p[0] = [AST.IfNode(p[3], p[5][0], p[7][0])] + p[7][1:] # same as p_if
+    p[0] = [AST.IfNode(p[3], p[5][0], p[7][0])] + p[7][1:]  # same as p_if
+
 
 def p_while(p):
     '''ABSTRACT_STATEMENT : WHILE BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT'''
-    p[0] = [AST.LoopNode(p[3], p[5][0])] + p[5][1:] # same as p_if
+    p[0] = [AST.LoopNode(p[3], p[5][0])] + p[5][1:]  # same as p_if
 
 
 #  ____  _
@@ -105,37 +130,37 @@ def p_shapetype(p):
 
 def p_colorvalue_colorhex(p):
     '''COLOR_VALUE : COLOR_HEX'''
-    p[0] = p[1]
+    p[0] = AST.TokenColorNode(p[1])
 
 
 def p_colorvalue_red(p):
     '''COLOR_VALUE : RED'''
-    p[0] = '#ff0000'
+    p[0] = AST.TokenColorNode('#ff0000')
 
 
 def p_colorvalue_green(p):
     '''COLOR_VALUE : GREEN'''
-    p[0] = '#00ff00'
+    p[0] = AST.TokenColorNode('#00ff00')
 
 
 def p_colorvalue_blue(p):
     '''COLOR_VALUE : BLUE'''
-    p[0] = '#0000ff'
+    p[0] = AST.TokenColorNode('#0000ff')
 
 
 def p_colorvalue_yellow(p):
     '''COLOR_VALUE : YELLOW'''
-    p[0] = '#ffff00'
+    p[0] = AST.TokenColorNode('#ffff00')
 
 
 def p_colorvalue_black(p):
     '''COLOR_VALUE : BLACK'''
-    p[0] = '#000000'
+    p[0] = AST.TokenColorNode('#000000')
 
 
 def p_colorvalue_white(p):
     '''COLOR_VALUE : WHITE'''
-    p[0] = '#ffffff'
+    p[0] = AST.TokenColorNode('#ffffff')
 
 #     _   _   _        _ _           _
 #    / \ | |_| |_ _ __(_) |__  _   _| |_ ___
@@ -203,8 +228,8 @@ def p_statement_draw(p):
 
 
 def p_int_expression_number(p):
-    '''EXPRESSION : VARIABLE_NAME'''
-    p[0] = AST.VariableNode(p[1])
+    '''EXPRESSION : ABSTRACT_VARIABLE_NAME'''
+    p[0] = p[1]
 
 
 def p_expression_unaryOperation(p):
@@ -234,17 +259,17 @@ def p_expression_bracket(p):
 
 def p_expression_number(p):
     '''EXPRESSION : NUMBER'''
-    p[0] = AST.TokenNode(p[1])  # already converted in int in lexemes.py
+    p[0] = AST.TokenNumberNode(p[1])  # already converted in int in lexemes.py
 
 
 def p_expression_true(p):
     '''EXPRESSION : TRUE'''
-    p[0] = AST.TokenNode(True)
+    p[0] = AST.TokenBooleanNode(True)
 
 
 def p_expression_false(p):
     '''EXPRESSION : FALSE'''
-    p[0] = AST.TokenNode(False)
+    p[0] = AST.TokenBooleanNode(False)
 
 
 # __     __         _       _     _
@@ -254,25 +279,51 @@ def p_expression_false(p):
 #    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
 
 
-def p_statement_declaration(p):
-    '''STATEMENT : BOOLEAN VARIABLE_NAME
-    | INTEGER VARIABLE_NAME
-    | SHAPE VARIABLE_NAME'''
-    p[0] = AST.DeclarationNode(p[1], p[2])
+def p_abstract_variable_name(p):
+    '''ABSTRACT_VARIABLE_NAME : VARIABLE_NAME'''
+    p[0] = AST.TokenVariableNameNode(p[1])
+
+
+def p_statement_declaration_boolean(p):
+    '''STATEMENT : BOOLEAN ABSTRACT_VARIABLE_NAME'''
+    p[0] = AST.DeclarationNode(AST.TypeBooleanNode(), p[2])
+
+
+def p_statement_declaration_integer(p):
+    '''STATEMENT : INTEGER ABSTRACT_VARIABLE_NAME'''
+    p[0] = AST.DeclarationNode(AST.TypeIntegerNode(), p[2])
+
+
+def p_statement_declaration_shape(p):
+    '''STATEMENT : SHAPE ABSTRACT_VARIABLE_NAME'''
+    p[0] = AST.DeclarationNode(AST.TypeShapeNode(), p[2])
 
 
 def p_statement_affetation(p):
-    '''STATEMENT : VARIABLE_NAME AFFECTATION EXPRESSION'''
+    '''STATEMENT : ABSTRACT_VARIABLE_NAME AFFECTATION EXPRESSION'''
     p[0] = AST.AffectationNode(p[1], p[3])
 
 
-def p_statement_declaration_affetation(p):
-    '''STATEMENT : BOOLEAN VARIABLE_NAME AFFECTATION EXPRESSION
-    | INTEGER VARIABLE_NAME AFFECTATION EXPRESSION
-    | SHAPE VARIABLE_NAME AFFECTATION EXPRESSION'''
-    declaration = AST.DeclarationNode(p[1], p[2])
+# We must find a way to create the shorthands without duplicating the code
+def p_statement_declaration_affetation_boolean(p):
+    '''STATEMENT : BOOLEAN ABSTRACT_VARIABLE_NAME AFFECTATION EXPRESSION'''
+    declaration = AST.DeclarationNode(AST.TypeBooleanNode(), p[2])
     affectation = AST.AffectationNode(p[2], p[4])
     # micro block for the shorthand (can't use the list syntax because it's a STATEMENT (one-line), and not a ABSTRACT_STATEMENT)
+    p[0] = AST.BlockNode([declaration, affectation], "declaraffect")
+
+
+def p_statement_declaration_affetation_integer(p):
+    '''STATEMENT : INTEGER ABSTRACT_VARIABLE_NAME AFFECTATION EXPRESSION'''
+    declaration = AST.DeclarationNode(AST.TypeIntegerNode(), p[2])
+    affectation = AST.AffectationNode(p[2], p[4])
+    p[0] = AST.BlockNode([declaration, affectation], "declaraffect")
+
+
+def p_statement_declaration_affetation_shape(p):
+    '''STATEMENT : SHAPE ABSTRACT_VARIABLE_NAME AFFECTATION EXPRESSION'''
+    declaration = AST.DeclarationNode(AST.TypeShapeNode(), p[2])
+    affectation = AST.AffectationNode(p[2], p[4])
     p[0] = AST.BlockNode([declaration, affectation], "declaraffect")
 
 
@@ -297,7 +348,7 @@ def parse(program):
     programs = []
     for block in blocks:
         instructions = []
-        if block is AST.BlockNode: # unbox block if the program is a block
+        if block is AST.BlockNode:  # unbox block if the program is a block
             instructions = block.children
         else:
             instructions = block
