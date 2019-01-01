@@ -60,6 +60,10 @@ def p_block_declaration(p):
     '''ABSTRACT_STATEMENT : BRACE_OPEN ABSTRACT_STATEMENT BRACE_CLOSE'''
     p[0] = [AST.BlockNode(p[2])]
 
+def p_block_declaration_empty(p):
+    '''ABSTRACT_STATEMENT : BRACE_OPEN BRACE_CLOSE''' # to allow empty blocks
+    p[0] = []
+
 def p_if(p):
     '''ABSTRACT_STATEMENT : IF BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT'''
     p[0] = [AST.IfNode(p[3], p[5][0])] + p[5][1:] # <- only take the first ABSTRACT_STATEMENT following the expression (target block) and add the remaining list to the current return list
@@ -70,7 +74,6 @@ def p_if_else(p):
 
 def p_while(p):
     '''ABSTRACT_STATEMENT : WHILE BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT'''
-    print(*p)
     p[0] = [AST.LoopNode(p[3], p[5][0])] + p[5][1:] # same as p_if
 
 
@@ -263,14 +266,14 @@ def p_statement_affetation(p):
     p[0] = AST.AffectationNode(p[1], p[3])
 
 
-def p_statement_affetation_declaration(p):
+def p_statement_declaration_affetation(p):
     '''STATEMENT : BOOLEAN VARIABLE_NAME AFFECTATION EXPRESSION
     | INTEGER VARIABLE_NAME AFFECTATION EXPRESSION
     | SHAPE VARIABLE_NAME AFFECTATION EXPRESSION'''
     declaration = AST.DeclarationNode(p[1], p[2])
     affectation = AST.AffectationNode(p[2], p[4])
-    # micro program for the shorthand
-    p[0] = AST.ProgramNode([declaration, affectation])
+    # micro block for the shorthand (can't use the list syntax because it's a STATEMENT (one-line), and not a ABSTRACT_STATEMENT)
+    p[0] = AST.BlockNode([declaration, affectation], "declaraffect")
 
 
 def p_useless_expression(p):
@@ -290,19 +293,29 @@ def p_error(p):
 
 
 def parse(program):
-    # mini-hack to enable to declare a parent block (JSON like for the program)
-    return AST.ProgramNode(yacc.parse(program, debug=False)[0].children)
+    blocks = yacc.parse(program, debug=False)
+    programs = []
+    for block in blocks:
+        instructions = []
+        if block is AST.BlockNode: # unbox block if the program is a block
+            instructions = block.children
+        else:
+            instructions = block
+        programs.append(AST.ProgramNode(instructions))
+    return programs
 
 
 yacc.yacc(outputdir='./generated')
 
 if __name__ == '__main__':
-    prog = open(sys.argv[1]).read()
-    tree = parse(prog)
+    fileName = sys.argv[1]
+    prog = open(fileName).read()
+    programs = parse(prog)
 
-    if tree != None:
-        print("arbre :")
-        print(tree)
-        graph = tree.makegraphicaltree()
-        name = os.path.splitext(sys.argv[1])[0] + '-ast.pdf'
+    for i in range(len(programs)):
+        program = programs[i]
+        print("Program", i)
+        print(program)
+        graph = program.makegraphicaltree()
+        name = os.path.splitext(fileName)[0] + "-p" + str(i) + ".pdf"
         graph.write_pdf(name)

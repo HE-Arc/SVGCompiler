@@ -1,29 +1,29 @@
 # coding: latin-1
 
-''' Petit module utilitaire pour la construction, la manipulation et la
-repr�sentation d'arbres syntaxiques abstraits.
+""" Petit module utilitaire pour la construction, la manipulation et la
+repr�sentation d"arbres syntaxiques abstraits.
 
 S�rement plein de bugs et autres surprises. � prendre comme un
 "work in progress"...
-Notamment, l'utilisation de pydot pour repr�senter un arbre syntaxique cousu
-est une utilisation un peu "limite" de graphviz. �a marche, mais le layout n'est
+Notamment, l"utilisation de pydot pour repr�senter un arbre syntaxique cousu
+est une utilisation un peu "limite" de graphviz. �a marche, mais le layout n"est
 pas toujours optimal...
-'''
+"""
 
 import pydot
 
 
 class Node:
     count = 0
-    type = 'Node (unspecified)'
-    shape = 'ellipse'
+    type = "Node (unspecified)"
+    shape = "ellipse"
 
     def __init__(self, children=None):
         self.ID = str(Node.count)
         Node.count += 1
         if not children:
             self.children = []
-        elif hasattr(children, '__len__'):
+        elif hasattr(children, "__len__"):
             self.children = children
         else:
             self.children = [children]
@@ -32,9 +32,9 @@ class Node:
     def addNext(self, next):
         self.next.append(next)
 
-    def asciitree(self, prefix=''):
+    def asciitree(self, prefix=""):
         result = "%s%s\n" % (prefix, repr(self))
-        prefix += '|  '
+        prefix += "|  "
         for c in self.children:
             if not isinstance(c, Node):
                 result += "%s*** Error: Child of type %r: %r\n" % (
@@ -61,11 +61,11 @@ class Node:
                 edge.set_label(str(i))
             dot.add_edge(edge)
             # Workaround for a bug in pydot 1.0.2 on Windows:
-            #dot.set_graphviz_executables({'dot': r'C:\Program Files\Graphviz2.38\bin\dot.exe'})
+            #dot.set_graphviz_executables({"dot": r"C:\Program Files\Graphviz2.38\bin\dot.exe"})
         return dot
 
     def threadTree(self, graph, seen=None, col=0):
-        colors = ('red', 'green', 'blue', 'yellow', 'magenta', 'cyan')
+        colors = ("red", "green", "blue", "yellow", "magenta", "cyan")
         if not seen:
             seen = []
         if self in seen:
@@ -74,7 +74,7 @@ class Node:
         new = not graph.get_node(self.ID)
         if new:
             graphnode = pydot.Node(self.ID, label=repr(self), shape=self.shape)
-            graphnode.set_style('dotted')
+            graphnode.set_style("dotted")
             graph.add_node(graphnode)
         label = len(self.next) - 1
         for i, c in enumerate(self.next):
@@ -86,14 +86,14 @@ class Node:
             c.threadTree(graph, seen, col)
             edge = pydot.Edge(self.ID, c.ID)
             edge.set_color(color)
-            edge.set_arrowsize('.5')
+            edge.set_arrowsize(".5")
             # Les arr�tes correspondant aux coutures ne sont pas prises en compte
-            # pour le layout du graphe. Ceci permet de garder l'arbre dans sa repr�sentation
+            # pour le layout du graphe. Ceci permet de garder l"arbre dans sa repr�sentation
             # "standard", mais peut provoquer des surprises pour le trajet parfois un peu
             # tarabiscot� des coutures...
-            # En commantant cette ligne, le layout sera bien meilleur, mais l'arbre nettement
+            # En commantant cette ligne, le layout sera bien meilleur, mais l"arbre nettement
             # moins reconnaissable.
-            edge.set_constraint('false')
+            edge.set_constraint("false")
             if label:
                 edge.set_taillabel(str(i))
                 edge.set_labelfontcolor(color)
@@ -101,26 +101,35 @@ class Node:
         return graph
 
 class ProgramNode(Node):
-    type = 'Program'
+    type = "Program"
 
 class BlockNode(Node):
-    type = 'Block'
+    type = "Block"
 
+    def __init__(self, content, name = None):
+        Node.__init__(self, content)
+        self.name = name
+
+    def __repr__(self):
+        repr = self.type
+        if self.name != None:
+            repr = self.type + " : " + self.name
+        return repr
 
 class TokenNode(Node):
-    type = 'Token'
+    type = "Token"
 
     def __init__(self, tok):
         Node.__init__(self)
         self.tok = tok
 
     def __repr__(self):
-        return repr(str(self.tok))
+        return str(self.tok)
 
 
 #  ____  _
 # / ___|| |__   __ _ _ __   ___
-# \___ \| '_ \ / _` | '_ \ / _ \
+# \___ \| "_ \ / _` | "_ \ / _ \
 #  ___) | | | | (_| | |_) |  __/
 # |____/|_| |_|\__,_| .__/ \___|
 #                   |_|
@@ -160,7 +169,7 @@ class AffectationNode(Node):
 
 #     _   _   _        _ _           _
 #    / \ | |_| |_ _ __(_) |__  _   _| |_ ___
-#   / _ \| __| __| '__| | '_ \| | | | __/ _ \
+#   / _ \| __| __| "__| | "_ \| | | | __/ _ \
 #  / ___ \ |_| |_| |  | | |_) | |_| | ||  __/
 # /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
 
@@ -238,7 +247,7 @@ class BinaryOperation(Node):
 
 
 class DrawNode(Node):
-    type = 'draw'
+    type = "draw"
 
 
 class IfNode(Node):
@@ -256,24 +265,24 @@ class LoopNode(Node):
         return "Loop"
 
 class EntryNode(Node):
-    type = 'ENTRY'
+    type = "ENTRY"
 
     def __init__(self):
         Node.__init__(self, None)
 
 
 def addToClass(cls):
-    ''' D�corateur permettant d'ajouter la fonction d�cor�e en tant que m�thode
+    """ D�corateur permettant d"ajouter la fonction d�cor�e en tant que m�thode
     � une classe.
 
-    Permet d'impl�menter une forme �l�mentaire de programmation orient�e
+    Permet d"impl�menter une forme �l�mentaire de programmation orient�e
     aspects en regroupant les m�thodes de diff�rentes classes impl�mentant
     une m�me fonctionnalit� en un seul endroit.
 
     Attention, apr�s utilisation de ce d�corateur, la fonction d�cor�e reste dans
     le namespace courant. Si cela d�range, on peut utiliser del pour la d�truire.
-    Je ne sais pas s'il existe un moyen d'�viter ce ph�nom�ne.
-    '''
+    Je ne sais pas s"il existe un moyen d"�viter ce ph�nom�ne.
+    """
     def decorator(func):
         setattr(cls, func.__name__, func)
         return func

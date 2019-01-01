@@ -1,13 +1,10 @@
 {
-    while($i == 0)
-        @ $a;
-    integer $i;
+    integer $i = 0;
+    while($i < 10)
     {
-        $i = 0;
+        @ [circle: positionX=$i, positionY=$i, color=red];
+        @ [triangle: positionX=$i, positionY=$i, color=green];
+        @ [rectangle: positionX=$i, positionY=$i, color=blue];
+        $i = $i + 1;
     }
-    if ($i < 0)
-        while(true)
-        {
-            $j = true;
-        }
 }
