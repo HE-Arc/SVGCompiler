@@ -242,11 +242,18 @@ class DrawNode(Node):
 
 
 class IfNode(Node):
-    def __init__(self, conditionProgram, trueProgram, falseProgram = TokenNode("a")):
+    def __init__(self, conditionProgram, trueProgram = TokenNode("true"), falseProgram = TokenNode("false")):
         Node.__init__(self, [conditionProgram, trueProgram, falseProgram])
 
     def __repr__(self):
         return "If"
+
+class LoopNode(Node):
+    def __init__(self, conditionProgram, trueProgram):
+        Node.__init__(self, [conditionProgram, trueProgram])
+
+    def __repr__(self):
+        return "Loop"
 
 class EntryNode(Node):
     type = 'ENTRY'

@@ -1,0 +1,13 @@
+{
+    while($i == 0)
+        @ $a;
+    integer $i;
+    {
+        $i = 0;
+    }
+    if ($i < 0)
+        while(true)
+        {
+            $j = true;
+        }
+}

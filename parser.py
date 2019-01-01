@@ -48,21 +48,31 @@ unaryOperators = (
 
 
 
-def p_a(p):
+def p_lines(p):
     '''ABSTRACT_STATEMENT : STATEMENT LINE_BREAK'''
     p[0] = [p[1]]
 
-def p_b(p):
+def p_statements_recursion(p):
     '''ABSTRACT_STATEMENT : ABSTRACT_STATEMENT ABSTRACT_STATEMENT'''
     p[0] = p[1] + p[2]
 
-def p_c(p):
+def p_block_declaration(p):
     '''ABSTRACT_STATEMENT : BRACE_OPEN ABSTRACT_STATEMENT BRACE_CLOSE'''
     p[0] = [AST.BlockNode(p[2])]
 
-def p_d(p):
+def p_if(p):
     '''ABSTRACT_STATEMENT : IF BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT'''
-    p[0] = [AST.IfNode(p[3], p[5])]
+    p[0] = [AST.IfNode(p[3], p[5][0])] + p[5][1:] # <- only take the first ABSTRACT_STATEMENT following the expression (target block) and add the remaining list to the current return list
+
+def p_if_else(p):
+    '''ABSTRACT_STATEMENT : IF BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT ELSE ABSTRACT_STATEMENT'''
+    p[0] = [AST.IfNode(p[3], p[5][0], p[7][0])] + p[7][1:] # same as p_if
+
+def p_while(p):
+    '''ABSTRACT_STATEMENT : WHILE BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT'''
+    print(*p)
+    p[0] = [AST.LoopNode(p[3], p[5][0])] + p[5][1:] # same as p_if
+
 
 #  ____  _
 # / ___|| |__   __ _ _ __   ___
