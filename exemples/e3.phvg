@@ -1,10 +1,12 @@
 {
     integer $i = 0;
 
-    shape $s = [circle: radius=$i, positionX=$i, positionY=false, color=red];
+    shape $s = [circle: radius=$i, positionX=$i, positionY=$i, color=red];
 
-    while(true)
+    if(true)
     {
         @ $s;
     }
+    else
+    integer $d=2;
 }

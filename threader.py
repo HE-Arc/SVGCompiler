@@ -4,9 +4,10 @@
 from AST import addToClass
 import AST
 import nodes
-from parser_ import parse # we cant import a file named 'parser'... ?
+from parser_ import parse  # we cant import a file named 'parser'... ?
 import sys
 import os
+
 
 @addToClass(AST.Node)
 def thread(self, lastNode):
@@ -14,6 +15,7 @@ def thread(self, lastNode):
         lastNode = c.thread(lastNode)
     lastNode.addNext(self)
     return self
+
 
 @addToClass(nodes.LoopNode)
 def thread(self, lastNode):
@@ -25,28 +27,33 @@ def thread(self, lastNode):
 
     return self
 
+
 @addToClass(nodes.IfNode)
 def thread(self, lastNode):
-    exit = lastNode
+    # TODO: a la fin faut revenir au parent du if
     conditionProgram = self.conditionProgram
     trueProgram = self.trueProgram
     falseProgram = self.falseProgram
+
+    exitNode = lastNode.next[-1]
 
     exitCondition = conditionProgram.thread(lastNode)
     exitCondition.addNext(self)
     if trueProgram != None:
         exitTrueProgram = trueProgram.thread(self)
-        exitTrueProgram.addNext(self)
+        exitTrueProgram.addNext(exitNode)
     if falseProgram != None:
         exitFalseProgram = falseProgram.thread(self)
-        exitFalseProgram.addNext(self)
+        exitFalseProgram.addNext(exitNode)
 
     return self
+
 
 def thread(tree):
     entry = AST.EntryNode()
     tree.thread(entry)
     return entry
+
 
 if __name__ == '__main__':
     file = sys.argv[1]
@@ -66,7 +73,6 @@ if __name__ == '__main__':
         graph = program.makegraphicaltree()
         print("Generating graphical tree...")
         graph.write_pdf(graphName)
-
 
         graphNameThreaded = fileName + "-" + str(i) + "-threaded.pdf"
         programThreaded = thread(program)

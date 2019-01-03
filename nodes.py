@@ -231,7 +231,7 @@ class HeightNode(AttributeNode):
     def __init__(self, value):
         self.value = value
         self.checkType([TypeIntegerNode])
-        Node.__init__(self[value])
+        Node.__init__(self, [value])
 
     def __repr__(self):
         return "Height"
