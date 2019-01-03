@@ -1,11 +1,10 @@
 {
     integer $i = 0;
-    if(true > 0)
+
+    shape $s = [circle: radius=$i, positionX=$i, positionY=false, color=red];
+
+    while(true)
     {
-        @ [circle: positionX=$i, positionY=false, color=#ff0000];
-    }
-    else
-    {
-        @ [triangle: positionX=$i, positionY=$i, color=#ff0000];
+        @ $s;
     }
 }

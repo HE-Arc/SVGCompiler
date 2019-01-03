@@ -2,6 +2,7 @@ from AST import Node
 
 variablesTypes = dict()
 
+
 class ProgramNode(Node):
     type = "Program"
 
@@ -56,6 +57,7 @@ class TokenNumberNode(Node):
     def getOperationType(self):
         return TypeIntegerNode
 
+
 class TokenBooleanNode(Node):
     type = "Token Boolean"
 
@@ -107,26 +109,29 @@ class DeclarationNode(Node):
     def __repr__(self):
         return "Declaration"
 
+
 class UndeclaredVariableException(Exception):
     pass
 
-class InvalidAffectationTypeException(Exception):
+
+class InvalidTypeException(Exception):
     pass
+
 
 class AffectationNode(Node):
     def __init__(self, tokenVariableName, value):
         variableName = tokenVariableName.variableName
         if variableName not in variablesTypes.keys():
-            raise UndeclaredVariableException(f'Variable \'{variableName}\' not declared')
+            raise UndeclaredVariableException(
+                f'Variable \'{variableName}\' not declared')
 
         valueType = value.getOperationType()
         variableType = variablesTypes[variableName]
-        print(valueType, variableType)
         if valueType != variableType:
-            raise InvalidAffectationTypeException(f'Variable \'{variableName}\' is of type \'{variableType}\' instead of \'{valueType}\'')
+            raise InvalidTypeException(
+                f'Variable \'{variableName}\' is of type \'{variableType}\' instead of \'{valueType}\'')
 
         Node.__init__(self, [tokenVariableName, value])
-
 
     def __repr__(self):
         return "Affectation"
@@ -147,9 +152,20 @@ class ShapeNode(Node):
     def __repr__(self):
         return self.shapetype
 
+    def getOperationType(self):
+        return TypeShapeNode
+
 
 class DrawNode(Node):
     type = "draw"
+
+    def __init__(self, value):
+        valueType = value.getOperationType()
+        if valueType is not TypeShapeNode:
+            raise InvalidTypeException(
+                f'Must be a shape to draw instead of {valueType}')
+
+        Node.__init__(self, [value])
 
 
 #     _   _   _        _ _           _
@@ -158,49 +174,63 @@ class DrawNode(Node):
 #  / ___ \ |_| |_| |  | | |_) | |_| | ||  __/
 # /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
 
+class AttributeNode(Node):
+    def checkType(self, allowedType):
+        valueType = self.value.getOperationType()
+        if valueType not in allowedType:
+            raise InvalidTypeException(
+                f'Must be a {allowedType} for this attribute')
 
-class ColorNode(Node):
-    def __init__(self, value):
-        Node.__init__(self, [value])
 
+class ColorNode(AttributeNode):
     def __repr__(self):
         return "Color"
 
 
-class RadiusNode(Node):
+class RadiusNode(AttributeNode):
     def __init__(self, value):
+        self.value = value
+        self.checkType([TypeIntegerNode])
         Node.__init__(self, [value])
 
     def __repr__(self):
         return "Radius"
 
 
-class PositionXNode(Node):
+class PositionXNode(AttributeNode):
     def __init__(self, value):
+        self.value = value
+        self.checkType([TypeIntegerNode])
         Node.__init__(self, [value])
 
     def __repr__(self):
         return "PositionX"
 
 
-class PositionYNode(Node):
+class PositionYNode(AttributeNode):
     def __init__(self, value):
+        self.value = value
+        self.checkType([TypeIntegerNode])
         Node.__init__(self, [value])
 
     def __repr__(self):
         return "PositionY "
 
 
-class WidthNode(Node):
+class WidthNode(AttributeNode):
     def __init__(self, value):
+        self.value = value
+        self.checkType([TypeIntegerNode])
         Node.__init__(self, [value])
 
     def __repr__(self):
         return "Width"
 
 
-class HeightNode(Node):
+class HeightNode(AttributeNode):
     def __init__(self, value):
+        self.value = value
+        self.checkType([TypeIntegerNode])
         Node.__init__(self[value])
 
     def __repr__(self):
@@ -226,12 +256,27 @@ class UnaryOperation(Node):
         self.operande = operande
         self.operation = operation
 
+        constraints = UnaryOperation.operationTable[self.operation][1]
+        op = self.getOperandeType()
+        if op not in constraints:
+            raise InvalidOperandeException(
+                f'For unary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
+
+    def getOperandeType(self):
+        op = self.operande[0].getOperationType()
+        return op
+
+    def getOperationType(self):
+        operationLine = BinaryOperation.operationTable[self.operation]
+        return operationLine[0]
+
     def __repr__(self):
         return "UnaryOp : " + self.operation
 
 
 class InvalidOperandeException(Exception):
     pass
+
 
 class BinaryOperation(Node):
     operationTable = {
@@ -255,7 +300,8 @@ class BinaryOperation(Node):
         constraints = BinaryOperation.operationTable[self.operation][1]
         op = self.getOperandeType()
         if op not in constraints:
-            raise InvalidOperandeException(f'For binary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
+            raise InvalidOperandeException(
+                f'For binary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
 
     def getOperandeType(self):
         op1 = self.operandes[0].getOperationType()
@@ -276,10 +322,18 @@ class BinaryOperation(Node):
 # |____/ \__|_|   \__,_|\___|\__|\__,_|_|  \___||___/
 
 
+class NotBooleanException(Exception):
+    pass
+
+
 class IfNode(Node):
     def __init__(self, conditionProgram, trueProgram=None, falseProgram=None):
         l = [conditionProgram]
         self.conditionProgram = conditionProgram
+        conditionProgramType = self.conditionProgram.getOperationType()
+        if conditionProgramType is not TypeBooleanNode:
+            raise NotBooleanException("Must be a boolean for a If")
+
         self.trueProgram = trueProgram
         self.falseProgram = falseProgram
         if trueProgram != None:
@@ -295,7 +349,11 @@ class IfNode(Node):
 
 class LoopNode(Node):
     def __init__(self, conditionProgram, trueProgram):
+        self.conditionProgram = conditionProgram
         Node.__init__(self, [conditionProgram, trueProgram])
+        conditionProgramType = self.conditionProgram.getOperationType()
+        if conditionProgramType is not TypeBooleanNode:
+            raise NotBooleanException("Must be a boolean for a Loop")
 
     def __repr__(self):
         return "Loop"
