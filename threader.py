@@ -22,6 +22,24 @@ def thread(self, lastNode):
 
     return self
 
+@addToClass(nodes.IfNode)
+def thread(self, lastNode):
+    exit = lastNode
+    conditionProgram = self.conditionProgram
+    trueProgram = self.trueProgram
+    falseProgram = self.falseProgram
+
+    exitCondition = conditionProgram.thread(lastNode)
+    exitCondition.addNext(self)
+    if trueProgram != None:
+        exitTrueProgram = trueProgram.thread(self)
+        exitTrueProgram.addNext(self)
+    if falseProgram != None:
+        exitFalseProgram = falseProgram.thread(self)
+        exitFalseProgram.addNext(self)
+
+    return self
+
 def thread(tree):
     entry = AST.EntryNode()
     tree.thread(entry)
@@ -39,10 +57,11 @@ if __name__ == '__main__':
     for i in range(len(programs)):
         program = programs[i]
         print("Program", i)
-        # print(program)
+        print(program)
 
         graphName = fileName + "-" + str(i) + ".pdf"
         graph = program.makegraphicaltree()
+        print("Generating graphical tree...")
         graph.write_pdf(graphName)
 
 
@@ -50,8 +69,7 @@ if __name__ == '__main__':
         programThreaded = thread(program)
         programThreaded.threadTree(graph)
 
+        print("Generating threaded graphical tree...")
         graph.write_pdf(graphNameThreaded)
-
-
 
     # exit()

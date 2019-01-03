@@ -36,6 +36,10 @@ class TokenVariableNameNode(Node):
         return Node.__repr__(self) + " : " + str(self.variableName)
 
 
+    def __copy__(self):
+        return TokenVariableNameNode(self.variableName)
+
+
 class TokenNumberNode(Node):
     type = "Token Number"
 
@@ -212,6 +216,7 @@ class BinaryOperation(Node):
 class IfNode(Node):
     def __init__(self, conditionProgram, trueProgram=None, falseProgram=None):
         l = [conditionProgram]
+        self.conditionProgram = conditionProgram
         self.trueProgram = trueProgram
         self.falseProgram = falseProgram
         if trueProgram != None:

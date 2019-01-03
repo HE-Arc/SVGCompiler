@@ -1,0 +1,11 @@
+{
+    integer $i = 0;
+    if($i < 10)
+    {
+        @ [circle: positionX=$i, positionY=$i, color=#ff0000];
+    }
+    else
+    {
+        @ [triangle: positionX=$i, positionY=$i, color=#ff0000];
+    }
+}

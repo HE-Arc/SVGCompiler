@@ -6,6 +6,7 @@ from lexemes import tokens
 import nodes as AST
 import sys
 import os
+from copy import copy
 
 precedence = (
     ('left', 'INTEGER_MINUS'),
@@ -308,7 +309,7 @@ def p_statement_affetation(p):
 def p_statement_declaration_affetation_boolean(p):
     '''STATEMENT : BOOLEAN ABSTRACT_VARIABLE_NAME AFFECTATION EXPRESSION'''
     declaration = AST.DeclarationNode(AST.TypeBooleanNode(), p[2])
-    affectation = AST.AffectationNode(p[2], p[4])
+    affectation = AST.AffectationNode(copy(p[2]), p[4])
     # micro block for the shorthand (can't use the list syntax because it's a STATEMENT (one-line), and not a ABSTRACT_STATEMENT)
     p[0] = AST.BlockNode([declaration, affectation], "declaraffect")
 
@@ -316,14 +317,14 @@ def p_statement_declaration_affetation_boolean(p):
 def p_statement_declaration_affetation_integer(p):
     '''STATEMENT : INTEGER ABSTRACT_VARIABLE_NAME AFFECTATION EXPRESSION'''
     declaration = AST.DeclarationNode(AST.TypeIntegerNode(), p[2])
-    affectation = AST.AffectationNode(p[2], p[4])
+    affectation = AST.AffectationNode(copy(p[2]), p[4])
     p[0] = AST.BlockNode([declaration, affectation], "declaraffect")
 
 
 def p_statement_declaration_affetation_shape(p):
     '''STATEMENT : SHAPE ABSTRACT_VARIABLE_NAME AFFECTATION EXPRESSION'''
     declaration = AST.DeclarationNode(AST.TypeShapeNode(), p[2])
-    affectation = AST.AffectationNode(p[2], p[4])
+    affectation = AST.AffectationNode(copy(p[2]), p[4])
     p[0] = AST.BlockNode([declaration, affectation], "declaraffect")
 
 
