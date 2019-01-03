@@ -1,5 +1,6 @@
 from AST import Node
 
+variablesTypes = dict()
 
 class ProgramNode(Node):
     type = "Program"
@@ -35,9 +36,11 @@ class TokenVariableNameNode(Node):
     def __repr__(self):
         return Node.__repr__(self) + " : " + str(self.variableName)
 
-
     def __copy__(self):
         return TokenVariableNameNode(self.variableName)
+
+    def getOperationType(self):
+        return variablesTypes[self.variableName]
 
 
 class TokenNumberNode(Node):
@@ -50,6 +53,8 @@ class TokenNumberNode(Node):
     def __repr__(self):
         return Node.__repr__(self) + " : " + str(self.value)
 
+    def getOperationType(self):
+        return TypeIntegerNode
 
 class TokenBooleanNode(Node):
     type = "Token Boolean"
@@ -60,6 +65,10 @@ class TokenBooleanNode(Node):
 
     def __repr__(self):
         return Node.__repr__(self) + " : " + str(self.value)
+
+    def getOperationType(self):
+        return TypeBooleanNode
+
 
 class TokenColorNode(Node):
     type = "Token Color"
@@ -91,16 +100,33 @@ class TypeShapeNode(Node):
 
 
 class DeclarationNode(Node):
-    def __init__(self, variableType, variableName):
-        Node.__init__(self, [variableType, variableName])
+    def __init__(self, variableType, tokenVariableName):
+        Node.__init__(self, [variableType, tokenVariableName])
+        variablesTypes[tokenVariableName.variableName] = type(variableType)
 
     def __repr__(self):
         return "Declaration"
 
+class UndeclaredVariableException(Exception):
+    pass
+
+class InvalidAffectationTypeException(Exception):
+    pass
 
 class AffectationNode(Node):
-    def __init__(self, variableName, value):
-        Node.__init__(self, [variableName, value])
+    def __init__(self, tokenVariableName, value):
+        variableName = tokenVariableName.variableName
+        if variableName not in variablesTypes.keys():
+            raise UndeclaredVariableException(f'Variable \'{variableName}\' not declared')
+
+        valueType = value.getOperationType()
+        variableType = variablesTypes[variableName]
+        print(valueType, variableType)
+        if valueType != variableType:
+            raise InvalidAffectationTypeException(f'Variable \'{variableName}\' is of type \'{variableType}\' instead of \'{valueType}\'')
+
+        Node.__init__(self, [tokenVariableName, value])
+
 
     def __repr__(self):
         return "Affectation"
@@ -175,7 +201,7 @@ class WidthNode(Node):
 
 class HeightNode(Node):
     def __init__(self, value):
-        Node.__init__(self [value])
+        Node.__init__(self[value])
 
     def __repr__(self):
         return "Height"
@@ -190,18 +216,55 @@ class HeightNode(Node):
 
 
 class UnaryOperation(Node):
+    operationTable = {
+        '!': (TypeBooleanNode, [TypeBooleanNode]),
+        '-': (TypeIntegerNode, [TypeIntegerNode]),
+    }
+
     def __init__(self, operation, operande):
         Node.__init__(self, operande)
+        self.operande = operande
         self.operation = operation
 
     def __repr__(self):
         return "UnaryOp : " + self.operation
 
 
+class InvalidOperandeException(Exception):
+    pass
+
 class BinaryOperation(Node):
-    def __init__(self, operation, operande):
-        Node.__init__(self, operande)
+    operationTable = {
+        '+': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
+        '-': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
+        '*': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
+        '/': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
+        '==': (TypeBooleanNode, [(TypeIntegerNode, TypeIntegerNode), (TypeBooleanNode, TypeBooleanNode)]),
+        '!=': (TypeBooleanNode, [(TypeIntegerNode, TypeIntegerNode), (TypeBooleanNode, TypeBooleanNode)]),
+        '&&': (TypeBooleanNode, [(TypeBooleanNode, TypeBooleanNode)]),
+        '||': (TypeBooleanNode, [(TypeBooleanNode, TypeBooleanNode)]),
+        '<': (TypeBooleanNode, [(TypeIntegerNode, TypeIntegerNode)]),
+        '>': (TypeBooleanNode, [(TypeIntegerNode, TypeIntegerNode)]),
+    }
+
+    def __init__(self, operation, operandes):
+        Node.__init__(self, operandes)
+        self.operandes = operandes
         self.operation = operation
+
+        constraints = BinaryOperation.operationTable[self.operation][1]
+        op = self.getOperandeType()
+        if op not in constraints:
+            raise InvalidOperandeException(f'For binary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
+
+    def getOperandeType(self):
+        op1 = self.operandes[0].getOperationType()
+        op2 = self.operandes[1].getOperationType()
+        return (op1, op2)
+
+    def getOperationType(self):
+        operationLine = BinaryOperation.operationTable[self.operation]
+        return operationLine[0]
 
     def __repr__(self):
         return "BinaryOp : " + self.operation

@@ -1,8 +1,8 @@
 {
     integer $i = 0;
-    if($i < 10)
+    if(true > 0)
     {
-        @ [circle: positionX=$i, positionY=$i, color=#ff0000];
+        @ [circle: positionX=$i, positionY=false, color=#ff0000];
     }
     else
     {
