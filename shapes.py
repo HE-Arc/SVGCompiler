@@ -9,6 +9,14 @@ class Shape(object):
         self.posX = posX
         self.posY = posY
 
+    @staticmethod
+    def buildSVG(shapeList, fileName):
+        with open(fileName, 'w') as file: 
+            file.write('<svg xmlns="http://www.w3.org/2000/svg">\n') 
+            for shape in shapeList:
+                file.write(f'{shape}\n')
+            file.write('</svg>')
+
 
 class Circle(Shape):
 
