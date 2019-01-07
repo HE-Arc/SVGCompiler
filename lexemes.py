@@ -96,9 +96,12 @@ t_ignore_comments = r'//.*\n'
 t_ignore_linebreak = r'\n'
 t_ignore_spaces = r'\s'
 
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
 
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    print(f'Illegal character \'{t.value[0]}\' at line {t.lineno}')
     t.lexer.skip(1)
 
 

@@ -4,9 +4,10 @@
 
     while($i < 1000)
     {
+        !$i;
         @[circle: radius=$i, positionX=$i*3, positionY=$i*3, color=red];
 
-        if ($counter % 2 == 0)
+        if ($counter % 2 == true)
             @[rectangle: width=$i, positionX=$i*3,height=$i, positionY=1~100, color=green];
         else
             @[triangle: width=$i, positionX=$i*3,height=$i, positionY=$i*3, color=blue];
@@ -14,6 +15,7 @@
         $i = $i *2;
         $counter=$counter+1;
     }
+        
 }
 {
     @[circle: radius=10, positionX=0, positionY=0, color=red];

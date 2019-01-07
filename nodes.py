@@ -1,6 +1,7 @@
 from AST import Node
 
-variablesTypes = dict() # variable used to determinate if a variable have the right type while creating the tree
+# variable used to determinate if a variable have the right type while creating the tree
+variablesTypes = dict()
 
 
 class ProgramNode(Node):
@@ -109,22 +110,23 @@ class DeclarationNode(Node):
     def __repr__(self):
         return "Declaration"
 
+
 class AffectationNode(Node):
     def __init__(self, tokenVariableName, value):
         variableName = tokenVariableName.variableName
         if variableName not in variablesTypes.keys():
-            print(f'UndeclaredVariableException : Variable \'{variableName}\' not declared')
+            print(
+                f'UndeclaredVariableException : Variable \'{variableName}\' not declared')
             exit()
 
         valueType = value.getOperationType()
         variableType = variablesTypes[variableName]
         if valueType != variableType:
-            print(f'InvalidTypeException : Variable \'{variableName}\' is of type \'{variableType}\' instead of \'{valueType}\'')
+            print(
+                f'InvalidTypeException : Variable \'{variableName}\' is of type \'{variableType}\' instead of \'{valueType}\'')
             exit()
 
         Node.__init__(self, [tokenVariableName, value])
-
-
 
     def __repr__(self):
         return "Affectation"
@@ -155,7 +157,8 @@ class DrawNode(Node):
     def __init__(self, value):
         valueType = value.getOperationType()
         if valueType is not TypeShapeNode:
-            print(f'InvalidTypeException : Must be a shape to draw instead of {valueType}')
+            print(
+                f'InvalidTypeException : Must be a shape to draw instead of {valueType}')
             exit()
 
         Node.__init__(self, [value])
@@ -171,7 +174,8 @@ class AttributeNode(Node):
     def checkType(self, allowedType):
         valueType = self.value.getOperationType()
         if valueType not in allowedType:
-            print(f'InvalidTypeException : Must be a {allowedType} for this attribute')
+            print(
+                f'InvalidTypeException : Must be a {allowedType} for this attribute')
             exit()
 
 
@@ -252,7 +256,9 @@ class UnaryOperation(Node):
         constraints = UnaryOperation.operationTable[self.operation][1]
         op = self.getOperandeType()
         if op not in constraints:
-            print(f'InvalidOperandeException : For unary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
+            print(
+                f'InvalidOperandeException : For unary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
+                #TODO: gestion erreur: entourer d'un tuple et d'une liste ?
             exit()
 
     def getOperandeType(self):
@@ -265,6 +271,11 @@ class UnaryOperation(Node):
 
     def __repr__(self):
         return "UnaryOp : " + self.operation
+
+
+def createErrorStringFromTupleList(tupleList):
+    return " or ".join(map(lambda tup: "/".join(map(lambda x: x().type.split(" ")[-1], tup)), tupleList))
+
 
 class BinaryOperation(Node):
     operationTable = {
@@ -290,7 +301,8 @@ class BinaryOperation(Node):
         constraints = BinaryOperation.operationTable[self.operation][1]
         op = self.getOperandeType()
         if op not in constraints:
-            print(f'InvalidOperandeException : For binary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
+            print(
+                f'InvalidOperandeException : For binary operation \'{self.operation}\' use \'{createErrorStringFromTupleList(constraints)}\' instead of \'{createErrorStringFromTupleList([op])}\'')
             exit()
 
     def getOperandeType(self):
@@ -310,6 +322,7 @@ class BinaryOperation(Node):
 # \___ \| __| '__| | | |/ __| __| | | | '__/ _ \/ __|
 #  ___) | |_| |  | |_| | (__| |_| |_| | | |  __/\__ \
 # |____/ \__|_|   \__,_|\___|\__|\__,_|_|  \___||___/
+
 
 class IfNode(Node):
     def __init__(self, conditionProgram, trueProgram=None, falseProgram=None):
