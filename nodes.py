@@ -122,8 +122,10 @@ class AffectationNode(Node):
         valueType = value.getOperationType()
         variableType = variablesTypes[variableName]
         if valueType != variableType:
+            print(variableType)
+            print(valueType)
             print(
-                f'InvalidTypeException : Variable \'{variableName}\' is of type \'{variableType}\' instead of \'{valueType}\'')
+                f'InvalidTypeException : Variable \'{variableName}\' is of type \'{createErrorStringFromClassName(valueType)}\' instead of \'{createErrorStringFromClassName(variableType)}\'')
             exit()
 
         Node.__init__(self, [tokenVariableName, value])
@@ -241,6 +243,19 @@ class HeightNode(AttributeNode):
 #  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
 #       |_|
 
+'''
+Input: a list of tuples for a binary operation, a single object for unary operation
+Output: a formatted string of types
+This method is used for the errors
+'''
+
+
+def createErrorStringFromClassName(className):
+    if type(className) is list:
+        return " or ".join(map(lambda tup: "/".join(map(lambda x: x().type.split(" ")[-1], tup)), className))
+    else:
+        return className().type.split(" ")[-1]
+
 
 class UnaryOperation(Node):
     operationTable = {
@@ -257,8 +272,7 @@ class UnaryOperation(Node):
         op = self.getOperandeType()
         if op not in constraints:
             print(
-                f'InvalidOperandeException : For unary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
-                #TODO: gestion erreur: entourer d'un tuple et d'une liste ?
+                f'InvalidOperandeException : For unary operation \'{self.operation}\' use \'{createErrorStringFromClassName(constraints[0])}\' instead of \'{createErrorStringFromClassName(op)}\'')
             exit()
 
     def getOperandeType(self):
@@ -271,10 +285,6 @@ class UnaryOperation(Node):
 
     def __repr__(self):
         return "UnaryOp : " + self.operation
-
-
-def createErrorStringFromTupleList(tupleList):
-    return " or ".join(map(lambda tup: "/".join(map(lambda x: x().type.split(" ")[-1], tup)), tupleList))
 
 
 class BinaryOperation(Node):
@@ -302,7 +312,7 @@ class BinaryOperation(Node):
         op = self.getOperandeType()
         if op not in constraints:
             print(
-                f'InvalidOperandeException : For binary operation \'{self.operation}\' use \'{createErrorStringFromTupleList(constraints)}\' instead of \'{createErrorStringFromTupleList([op])}\'')
+                f'InvalidOperandeException : For binary operation \'{self.operation}\' use \'{createErrorStringFromClassName(constraints)}\' instead of \'{createErrorStringFromClassName([op])}\'')
             exit()
 
     def getOperandeType(self):
