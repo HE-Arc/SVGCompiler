@@ -1,6 +1,6 @@
 from AST import Node
 
-variablesTypes = dict()
+variablesTypes = dict() # variable used to determinate if a variable have the right type while creating the tree
 
 
 class ProgramNode(Node):
@@ -109,27 +109,18 @@ class DeclarationNode(Node):
     def __repr__(self):
         return "Declaration"
 
-
-class UndeclaredVariableException(Exception):
-    pass
-
-
-class InvalidTypeException(Exception):
-    pass
-
-
 class AffectationNode(Node):
     def __init__(self, tokenVariableName, value):
         variableName = tokenVariableName.variableName
         if variableName not in variablesTypes.keys():
-            raise UndeclaredVariableException(
-                f'Variable \'{variableName}\' not declared')
+            print(f'UndeclaredVariableException : Variable \'{variableName}\' not declared')
+            exit()
 
         valueType = value.getOperationType()
         variableType = variablesTypes[variableName]
         if valueType != variableType:
-            raise InvalidTypeException(
-                f'Variable \'{variableName}\' is of type \'{variableType}\' instead of \'{valueType}\'')
+            print(f'InvalidTypeException : Variable \'{variableName}\' is of type \'{variableType}\' instead of \'{valueType}\'')
+            exit()
 
         Node.__init__(self, [tokenVariableName, value])
 
@@ -164,8 +155,8 @@ class DrawNode(Node):
     def __init__(self, value):
         valueType = value.getOperationType()
         if valueType is not TypeShapeNode:
-            raise InvalidTypeException(
-                f'Must be a shape to draw instead of {valueType}')
+            print(f'InvalidTypeException : Must be a shape to draw instead of {valueType}')
+            exit()
 
         Node.__init__(self, [value])
 
@@ -180,8 +171,8 @@ class AttributeNode(Node):
     def checkType(self, allowedType):
         valueType = self.value.getOperationType()
         if valueType not in allowedType:
-            raise InvalidTypeException(
-                f'Must be a {allowedType} for this attribute')
+            print(f'InvalidTypeException : Must be a {allowedType} for this attribute')
+            exit()
 
 
 class ColorNode(AttributeNode):
@@ -261,8 +252,8 @@ class UnaryOperation(Node):
         constraints = UnaryOperation.operationTable[self.operation][1]
         op = self.getOperandeType()
         if op not in constraints:
-            raise InvalidOperandeException(
-                f'For unary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
+            print(f'InvalidOperandeException : For unary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
+            exit()
 
     def getOperandeType(self):
         op = self.operande[0].getOperationType()
@@ -275,11 +266,6 @@ class UnaryOperation(Node):
     def __repr__(self):
         return "UnaryOp : " + self.operation
 
-
-class InvalidOperandeException(Exception):
-    pass
-
-
 class BinaryOperation(Node):
     operationTable = {
         '+': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
@@ -287,6 +273,7 @@ class BinaryOperation(Node):
         '*': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
         '/': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
         '%': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
+        '~': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
         '==': (TypeBooleanNode, [(TypeIntegerNode, TypeIntegerNode), (TypeBooleanNode, TypeBooleanNode)]),
         '!=': (TypeBooleanNode, [(TypeIntegerNode, TypeIntegerNode), (TypeBooleanNode, TypeBooleanNode)]),
         '&&': (TypeBooleanNode, [(TypeBooleanNode, TypeBooleanNode)]),
@@ -303,8 +290,8 @@ class BinaryOperation(Node):
         constraints = BinaryOperation.operationTable[self.operation][1]
         op = self.getOperandeType()
         if op not in constraints:
-            raise InvalidOperandeException(
-                f'For binary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
+            print(f'InvalidOperandeException : For binary operation \'{self.operation}\' use \'{constraints}\' instead of \'{op}\'')
+            exit()
 
     def getOperandeType(self):
         op1 = self.operandes[0].getOperationType()
@@ -324,11 +311,6 @@ class BinaryOperation(Node):
 #  ___) | |_| |  | |_| | (__| |_| |_| | | |  __/\__ \
 # |____/ \__|_|   \__,_|\___|\__|\__,_|_|  \___||___/
 
-
-class NotBooleanException(Exception):
-    pass
-
-
 class IfNode(Node):
     def __init__(self, conditionProgram, trueProgram=None, falseProgram=None):
         self.evaluated = False
@@ -336,7 +318,8 @@ class IfNode(Node):
         self.conditionProgram = conditionProgram
         conditionProgramType = self.conditionProgram.getOperationType()
         if conditionProgramType is not TypeBooleanNode:
-            raise NotBooleanException("Must be a boolean for a If")
+            print("NotBooleanException : Must be a boolean for a If")
+            exit()
 
         self.trueProgram = trueProgram
         self.falseProgram = falseProgram
@@ -357,7 +340,8 @@ class LoopNode(Node):
         Node.__init__(self, [conditionProgram, trueProgram])
         conditionProgramType = self.conditionProgram.getOperationType()
         if conditionProgramType is not TypeBooleanNode:
-            raise NotBooleanException("Must be a boolean for a Loop")
+            print("NotBooleanException : Must be a boolean for a Loop")
+            exit()
 
     def __repr__(self):
         return "Loop"

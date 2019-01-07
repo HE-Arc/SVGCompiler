@@ -7,9 +7,9 @@ import nodes
 from parser_ import parse  # we cant import a file named 'parser'... ?
 import sys
 import os
+import random
 from shapes import *
 from threader import thread
-
 
 binaryOperations = {
     '+': lambda x, y: x + y,
@@ -22,15 +22,14 @@ binaryOperations = {
     '&&': lambda x, y: x and y,
     '||': lambda x, y: x or y,
     '<': lambda x, y: x < y,
-    '>': lambda x, y: x > y
+    '>': lambda x, y: x > y,
+    '~' : lambda min, max: random.randint(min, max)
 }
 
 unaryOperations = {
     '!': lambda x: not x,
     '-': lambda x: -x
 }
-
-
 
 stack = []
 vars = {}
@@ -164,12 +163,20 @@ if __name__ == "__main__":
     fileExtension = fileSplited[1]
 
     code = open(file).read()
+    print("Parsing file :", file)
     programs = parse(code)
-
-    for i in range(len(programs)):
+    numberOfPrograms = len(programs)
+    for i in range(numberOfPrograms):
         program = programs[i]
 
         entry = thread(program)
         shapeList = synthese(entry)
 
-        Shape.buildSVG(shapeList, fileName=fileName + ".svg")
+        name = fileName
+        if numberOfPrograms > 1:
+            name += "-" + str(i)
+        name += ".svg"
+
+        print("SVG Generation :", name)
+
+        Shape.buildSVG(shapeList, fileName=name)
