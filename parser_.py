@@ -90,19 +90,21 @@ def p_block_declaration_empty(p):
 
 def p_if(p):
     '''ABSTRACT_STATEMENT : IF BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT'''
-    p[0] = [AST.IfNode(p[3], p[5][0])] + \
+    p[0] = [AST.IfNode(p[3], p[5][0], lineno=p.lineno(3))] + \
         p[5][1:
              ]  # <- only take the first ABSTRACT_STATEMENT following the expression (target block) and add the remaining list to the current return list
 
 
 def p_if_else(p):
     '''ABSTRACT_STATEMENT : IF BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT ELSE ABSTRACT_STATEMENT'''
-    p[0] = [AST.IfNode(p[3], p[5][0], p[7][0])] + p[7][1:]  # same as p_if
+    p[0] = [AST.IfNode(p[3], p[5][0], p[7][0], lineno=p.lineno(3))
+            ] + p[7][1:]  # same as p_if
 
 
 def p_while(p):
     '''ABSTRACT_STATEMENT : WHILE BRACKET_OPEN EXPRESSION BRACKET_CLOSE ABSTRACT_STATEMENT'''
-    p[0] = [AST.LoopNode(p[3], p[5][0])] + p[5][1:]  # same as p_if
+    p[0] = [AST.LoopNode(p[3], p[5][0], lineno=p.lineno(3))
+            ] + p[5][1:]  # same as p_if
 
 
 #  ____  _
@@ -184,32 +186,32 @@ def p_attributes(p):
 
 def p_attribute_radius(p):
     '''ATTRIBUTE : RADIUS AFFECTATION EXPRESSION'''
-    p[0] = AST.RadiusNode(p[3])
+    p[0] = AST.RadiusNode(p[3], lineno=p.lineno(2))
 
 
 def p_attribute_positionX(p):
     '''ATTRIBUTE : POSITIONX AFFECTATION EXPRESSION'''
-    p[0] = AST.PositionXNode(p[3])
+    p[0] = AST.PositionXNode(p[3], lineno=p.lineno(2))
 
 
 def p_attribute_positionY(p):
     '''ATTRIBUTE : POSITIONY AFFECTATION EXPRESSION'''
-    p[0] = AST.PositionYNode(p[3])
+    p[0] = AST.PositionYNode(p[3], lineno=p.lineno(2))
 
 
 def p_attribute_color(p):
     '''ATTRIBUTE : COLOR AFFECTATION COLOR_VALUE'''
-    p[0] = AST.ColorNode(p[3])
+    p[0] = AST.ColorNode(p[3], lineno=p.lineno(2))
 
 
 def p_attribute_width(p):
     '''ATTRIBUTE : WIDTH AFFECTATION EXPRESSION'''
-    p[0] = AST.WidthNode(p[3])
+    p[0] = AST.WidthNode(p[3], lineno=p.lineno(2))
 
 
 def p_attribute_height(p):
     '''ATTRIBUTE : HEIGHT AFFECTATION EXPRESSION'''
-    p[0] = AST.HeightNode(p[3])
+    p[0] = AST.HeightNode(p[3], lineno=p.lineno(2))
 
 #  ____  _        _                            _
 # / ___|| |_ __ _| |_ ___ _ __ ___   ___ _ __ | |_
@@ -220,7 +222,7 @@ def p_attribute_height(p):
 
 def p_statement_draw(p):
     '''STATEMENT : DRAW EXPRESSION'''
-    p[0] = AST.DrawNode(p[2])
+    p[0] = AST.DrawNode(p[2], lineno=p.lineno(1))
 
 #  _____                              _
 # | ____|_  ___ __  _ __ ___  ___ ___(_) ___  _ __
@@ -238,7 +240,7 @@ def p_int_expression_number(p):
 def p_expression_unaryOperation(p):
     '''EXPRESSION : INTEGER_MINUS EXPRESSION %prec UNARYNUMBER
     | BOOL_NOT EXPRESSION %prec UNARYBOOL'''
-    p[0] = AST.UnaryOperation(p[1], [p[2]])
+    p[0] = AST.UnaryOperation(p[1], [p[2]], lineno=p.lineno(1))
 
 
 def p_expression_binaryOperation(p):
@@ -254,7 +256,7 @@ def p_expression_binaryOperation(p):
     | EXPRESSION BOOL_OR EXPRESSION
     | EXPRESSION BOOL_LT EXPRESSION
     | EXPRESSION BOOL_GT EXPRESSION'''
-    p[0] = AST.BinaryOperation(p[2], [p[1], p[3]])
+    p[0] = AST.BinaryOperation(p[2], [p[1], p[3]], p.lineno(2))
 
 
 def p_expression_bracket(p):
@@ -306,14 +308,14 @@ def p_statement_declaration_shape(p):
 
 def p_statement_affetation(p):
     '''STATEMENT : ABSTRACT_VARIABLE_NAME AFFECTATION EXPRESSION'''
-    p[0] = AST.AffectationNode(p[1], p[3])
+    p[0] = AST.AffectationNode(p[1], p[3], lineno=p.lineno(2))
 
 
 # We must find a way to create the shorthands without duplicating the code
 def p_statement_declaration_affetation_boolean(p):
     '''STATEMENT : BOOLEAN ABSTRACT_VARIABLE_NAME AFFECTATION EXPRESSION'''
     declaration = AST.DeclarationNode(AST.TypeBooleanNode(), p[2])
-    affectation = AST.AffectationNode(copy(p[2]), p[4])
+    affectation = AST.AffectationNode(copy(p[2]), p[4], lineno=p.lineno(2))
     # micro block for the shorthand (can't use the list syntax because it's a STATEMENT (one-line), and not a ABSTRACT_STATEMENT)
     p[0] = AST.BlockNode([declaration, affectation], "declaraffect")
 
@@ -321,14 +323,14 @@ def p_statement_declaration_affetation_boolean(p):
 def p_statement_declaration_affetation_integer(p):
     '''STATEMENT : INTEGER ABSTRACT_VARIABLE_NAME AFFECTATION EXPRESSION'''
     declaration = AST.DeclarationNode(AST.TypeIntegerNode(), p[2])
-    affectation = AST.AffectationNode(copy(p[2]), p[4])
+    affectation = AST.AffectationNode(copy(p[2]), p[4], lineno=p.lineno(2))
     p[0] = AST.BlockNode([declaration, affectation], "declaraffect")
 
 
 def p_statement_declaration_affetation_shape(p):
     '''STATEMENT : SHAPE ABSTRACT_VARIABLE_NAME AFFECTATION EXPRESSION'''
     declaration = AST.DeclarationNode(AST.TypeShapeNode(), p[2])
-    affectation = AST.AffectationNode(copy(p[2]), p[4])
+    affectation = AST.AffectationNode(copy(p[2]), p[4], lineno=p.lineno(2))
     p[0] = AST.BlockNode([declaration, affectation], "declaraffect")
 
 
@@ -337,13 +339,14 @@ def p_useless_expression(p):
     '''STATEMENT : EXPRESSION'''
     p[0] = p[1]
 
+
 def p_error(p):
-    print("Parsing Error : ", p)
+    print(f"Parsing Error at line {p.lineno} : {p}")
     yacc.yacc().errok()
 
 
 def parse(program):
-    blocks = yacc.parse(program, debug=False)
+    blocks = yacc.parse(program, debug=False, tracking=True)
     programs = []
     for block in blocks:
         instructions = []
@@ -361,11 +364,11 @@ if __name__ == '__main__':
     fileName = sys.argv[1]
     prog = open(fileName).read()
     programs = parse(prog)
-
-    for i in range(len(programs)):
-        program = programs[i]
+    i = 0
+    for program in programs:
         print("Program", i)
         print(program)
         graph = program.makegraphicaltree()
         name = os.path.splitext(fileName)[0] + "-p" + str(i) + ".pdf"
         graph.write_pdf(name)
+        i += 1

@@ -1,10 +1,9 @@
 {
-    integer $i = 5;
+    integer $i = 1;
     integer $counter=1;
 
     while($i < 1000)
     {
-
         @[circle: radius=$i, positionX=$i*3, positionY=$i*3, color=red];
 
         if ($counter % 2 == 0)

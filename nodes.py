@@ -112,20 +112,20 @@ class DeclarationNode(Node):
 
 
 class AffectationNode(Node):
-    def __init__(self, tokenVariableName, value):
+    def __init__(self, tokenVariableName, value, lineno=0):
         variableName = tokenVariableName.variableName
+        self.lineno = lineno
         if variableName not in variablesTypes.keys():
             print(
-                f'UndeclaredVariableException : Variable \'{variableName}\' not declared')
+                f'UndeclaredVariableException at line {self.lineno} : Variable \'{variableName}\' not declared')
             exit()
 
         valueType = value.getOperationType()
         variableType = variablesTypes[variableName]
         if valueType != variableType:
-            print(variableType)
-            print(valueType)
+
             print(
-                f'InvalidTypeException : Variable \'{variableName}\' is of type \'{createErrorStringFromClassName(valueType)}\' instead of \'{createErrorStringFromClassName(variableType)}\'')
+                f'InvalidTypeException at line {self.lineno} : Variable \'{variableName}\' is of type \'{createErrorStringFromClassName(valueType)}\' instead of \'{createErrorStringFromClassName(variableType)}\'')
             exit()
 
         Node.__init__(self, [tokenVariableName, value])
@@ -156,11 +156,12 @@ class ShapeNode(Node):
 class DrawNode(Node):
     type = "draw"
 
-    def __init__(self, value):
+    def __init__(self, value, lineno=0):
         valueType = value.getOperationType()
+        self.lineno = lineno
         if valueType is not TypeShapeNode:
             print(
-                f'InvalidTypeException : Must be a shape to draw instead of {valueType}')
+                f'InvalidTypeException at line {self.lineno} : Must be a shape to draw instead of {createErrorStringFromClassName(valueType)}')
             exit()
 
         Node.__init__(self, [value])
@@ -172,12 +173,19 @@ class DrawNode(Node):
 #  / ___ \ |_| |_| |  | | |_) | |_| | ||  __/
 # /_/   \_\__|\__|_|  |_|_.__/ \__,_|\__\___|
 
+def createAttributeErrorStringFromClassName(className):
+    return str(className).split("Node")[0].split(".")[-1]
+
 class AttributeNode(Node):
+    def __init__(self, values, lineno=0):
+        self.lineno = lineno
+        Node.__init__(self, values)
+
     def checkType(self, allowedType):
         valueType = self.value.getOperationType()
         if valueType not in allowedType:
             print(
-                f'InvalidTypeException : Must be a {allowedType} for this attribute')
+                f'InvalidTypeException at line {self.lineno} : Must be a {createErrorStringFromClassName(allowedType[0])} for this attribute ({createAttributeErrorStringFromClassName(self.__class__)})')
             exit()
 
 
@@ -187,50 +195,50 @@ class ColorNode(AttributeNode):
 
 
 class RadiusNode(AttributeNode):
-    def __init__(self, value):
+    def __init__(self, value,lineno=0):
         self.value = value
+        AttributeNode.__init__(self, [value],lineno)
         self.checkType([TypeIntegerNode])
-        Node.__init__(self, [value])
 
     def __repr__(self):
         return "Radius"
 
 
 class PositionXNode(AttributeNode):
-    def __init__(self, value):
+    def __init__(self, value,lineno=0):
         self.value = value
+        AttributeNode.__init__(self, [value],lineno)
         self.checkType([TypeIntegerNode])
-        Node.__init__(self, [value])
 
     def __repr__(self):
         return "PositionX"
 
 
 class PositionYNode(AttributeNode):
-    def __init__(self, value):
+    def __init__(self, value,lineno=0):
         self.value = value
+        AttributeNode.__init__(self, [value],lineno)
         self.checkType([TypeIntegerNode])
-        Node.__init__(self, [value])
 
     def __repr__(self):
         return "PositionY "
 
 
 class WidthNode(AttributeNode):
-    def __init__(self, value):
+    def __init__(self, value,lineno=0):
         self.value = value
+        AttributeNode.__init__(self, [value],lineno)
         self.checkType([TypeIntegerNode])
-        Node.__init__(self, [value])
 
     def __repr__(self):
         return "Width"
 
 
 class HeightNode(AttributeNode):
-    def __init__(self, value):
+    def __init__(self, value,lineno=0):
         self.value = value
+        AttributeNode.__init__(self, [value],lineno)
         self.checkType([TypeIntegerNode])
-        Node.__init__(self, [value])
 
     def __repr__(self):
         return "Height"
@@ -263,16 +271,17 @@ class UnaryOperation(Node):
         '-': (TypeIntegerNode, [TypeIntegerNode]),
     }
 
-    def __init__(self, operation, operande):
+    def __init__(self, operation, operande,lineno=0):
         Node.__init__(self, operande)
         self.operande = operande
         self.operation = operation
+        self.lineno=lineno
 
         constraints = UnaryOperation.operationTable[self.operation][1]
         op = self.getOperandeType()
         if op not in constraints:
             print(
-                f'InvalidOperandeException : For unary operation \'{self.operation}\' use \'{createErrorStringFromClassName(constraints[0])}\' instead of \'{createErrorStringFromClassName(op)}\'')
+                f'InvalidOperandeException at line {self.lineno} : For unary operation \'{self.operation}\' use \'{createErrorStringFromClassName(constraints[0])}\' instead of \'{createErrorStringFromClassName(op)}\'')
             exit()
 
     def getOperandeType(self):
@@ -303,16 +312,17 @@ class BinaryOperation(Node):
         '>': (TypeBooleanNode, [(TypeIntegerNode, TypeIntegerNode)]),
     }
 
-    def __init__(self, operation, operandes):
+    def __init__(self, operation, operandes, lineno):
         Node.__init__(self, operandes)
         self.operandes = operandes
         self.operation = operation
+        self.lineno = lineno
 
         constraints = BinaryOperation.operationTable[self.operation][1]
         op = self.getOperandeType()
         if op not in constraints:
             print(
-                f'InvalidOperandeException : For binary operation \'{self.operation}\' use \'{createErrorStringFromClassName(constraints)}\' instead of \'{createErrorStringFromClassName([op])}\'')
+                f'InvalidOperandeException at line {self.lineno} : For binary operation \'{self.operation}\' use \'{createErrorStringFromClassName(constraints)}\' instead of \'{createErrorStringFromClassName([op])}\'')
             exit()
 
     def getOperandeType(self):
@@ -335,13 +345,15 @@ class BinaryOperation(Node):
 
 
 class IfNode(Node):
-    def __init__(self, conditionProgram, trueProgram=None, falseProgram=None):
+    def __init__(self, conditionProgram, trueProgram=None, falseProgram=None, lineno=0):
         self.evaluated = False
+        self.lineno = lineno
         l = [conditionProgram]
         self.conditionProgram = conditionProgram
         conditionProgramType = self.conditionProgram.getOperationType()
         if conditionProgramType is not TypeBooleanNode:
-            print("NotBooleanException : Must be a boolean for a If")
+            print(
+                f"NotBooleanException at line {self.lineno} : Must be a boolean for a If")
             exit()
 
         self.trueProgram = trueProgram
@@ -358,12 +370,14 @@ class IfNode(Node):
 
 
 class LoopNode(Node):
-    def __init__(self, conditionProgram, trueProgram):
+    def __init__(self, conditionProgram, trueProgram, lineno=0):
+        self.lineno = lineno
         self.conditionProgram = conditionProgram
         Node.__init__(self, [conditionProgram, trueProgram])
         conditionProgramType = self.conditionProgram.getOperationType()
         if conditionProgramType is not TypeBooleanNode:
-            print("NotBooleanException : Must be a boolean for a Loop")
+            print(
+                f"NotBooleanException at line {self.lineno} : Must be a boolean for a Loop")
             exit()
 
     def __repr__(self):

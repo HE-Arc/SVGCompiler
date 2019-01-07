@@ -23,7 +23,7 @@ binaryOperations = {
     '||': lambda x, y: x or y,
     '<': lambda x, y: x < y,
     '>': lambda x, y: x > y,
-    '~' : lambda min, max: random.randint(min, max)
+    '~': lambda min, max: random.randint(min, max)
 }
 
 unaryOperations = {
@@ -47,8 +47,6 @@ def valueOfToken(t):
 def synthese(node):
     shapeList = []
     while node:
-        # print("stack", stack)
-        # print("vars", vars)
         if node.__class__ in [AST.EntryNode, nodes.ProgramNode, nodes.BlockNode]:
             pass
         elif node.__class__ in [nodes.TokenNumberNode, nodes.TokenBooleanNode, nodes.TokenColorNode]:
@@ -122,11 +120,14 @@ def synthese(node):
 
             # shape creation
             if shapeType == 'circle':
-                shape = Circle(color=color, posX=posX, posY=posY, radius=radius)
+                shape = Circle(color=color, posX=posX,
+                               posY=posY, radius=radius)
             elif shapeType == 'rectangle':
-                shape = Rectangle(color=color, posX=posX, posY=posY, width=width, height=height)
+                shape = Rectangle(color=color, posX=posX,
+                                  posY=posY, width=width, height=height)
             elif shapeType == 'triangle':
-                shape = Triangle(color=color, posX=posX, posY=posY, width=width, height=height)
+                shape = Triangle(color=color, posX=posX,
+                                 posY=posY, width=width, height=height)
 
             stack.append(shape)
 
@@ -165,18 +166,18 @@ if __name__ == "__main__":
     code = open(file).read()
     print("Parsing file :", file)
     programs = parse(code)
-    numberOfPrograms = len(programs)
-    for i in range(numberOfPrograms):
-        program = programs[i]
+    i = 0
+    for program in programs:
 
         entry = thread(program)
         shapeList = synthese(entry)
 
         name = fileName
-        if numberOfPrograms > 1:
+        if len(programs) > 1:
             name += "-" + str(i)
         name += ".svg"
 
         print("SVG Generation :", name)
 
         Shape.buildSVG(shapeList, fileName=name)
+        i += 1
