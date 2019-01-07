@@ -2,11 +2,15 @@
     integer $i = 0;
 
     shape $s;
-    $s = [circle: radius=$i, positionX=$i+1, positionY=$i, color=red];
+    $s = [circle: radius=20, positionX=$i+1, positionY=$i, color=red];
 
-    while($i < 2)
+    if($i < 2)
     {
         @ $s;
         $i = $i + 1;
+    }
+    else
+    {
+        integer $i;
     }
 }

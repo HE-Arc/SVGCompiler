@@ -47,6 +47,8 @@ def valueOfToken(t):
 def synthese(node):
     shapeList = []
     while node:
+        # print("stack", stack)
+        # print("vars", vars)
         if node.__class__ in [AST.EntryNode, nodes.ProgramNode, nodes.BlockNode]:
             pass
         elif node.__class__ in [nodes.TokenNumberNode, nodes.TokenBooleanNode, nodes.TokenColorNode]:
@@ -68,7 +70,6 @@ def synthese(node):
             varType = stack.pop()
             vars[varName] = None
         elif node.__class__ == nodes.AffectationNode:
-            print(node)
             varValue = stack.pop()
             varName = stack.pop()
             vars[varName] = varValue
@@ -134,16 +135,18 @@ def synthese(node):
             shapeList.append(shape)
         elif node.__class__ == nodes.IfNode:
             ifnode = node
+
             if node.evaluated == False:
                 cond = stack.pop()
                 if cond:  # si cond vraie, on va à "gauche"
                     node = node.next[0]
-                else:  # sinon à "droite"
+                elif len(node.next) == 3:  # sinon à "droite"
                     node = node.next[1]
                 ifnode.evaluated = True
             else:
-                node = node.next[2]
+                node = node.next[-1]
                 ifnode.evaluated = False
+            continue
 
         if node.next:
             node = node.next[0]
