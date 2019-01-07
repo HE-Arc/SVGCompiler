@@ -1,16 +1,17 @@
 {
-    integer $i = 0;
+    integer $i = 5;
+    integer $counter=1;
 
-    shape $s;
-    $s = [circle: radius=20, positionX=$i+1, positionY=$i, color=red];
+    while($i < 250)
+    {
+        @[circle: radius=$i, positionX=$i*3, positionY=$i*3, color=red];
 
-    if($i < 2)
-    {
-        @ $s;
-        $i = $i + 1;
-    }
-    else
-    {
-        integer $i;
+        if ($counter>4)
+            @[rectangle: width=$i, positionX=$i*3,height=$i, positionY=$i*3, color=green];
+        else
+            @[triangle: width=$i, positionX=$i*3,height=$i, positionY=$i*3, color=blue];
+
+        $i = $i *2;
+        $counter=$counter+1;
     }
 }

@@ -9,11 +9,6 @@ import os
 from copy import copy
 
 precedence = (
-    ('left', 'INTEGER_MINUS'),
-    ('left', 'INTEGER_PLUS'),
-    ('left', 'INTEGER_DIVIDE'),
-    ('left', 'INTEGER_TIMES'),
-
     ('left', 'BOOL_OR'),
     ('left', 'BOOL_AND'),
 
@@ -22,6 +17,11 @@ precedence = (
 
     ('left', 'BOOL_LT'),
     ('left', 'BOOL_GT'),
+
+    ('left', 'INTEGER_MINUS'),
+    ('left', 'INTEGER_PLUS'),
+    ('left', 'INTEGER_DIVIDE'),
+    ('left', 'INTEGER_TIMES'),
 
     ('right', 'UNARYNUMBER'),
     ('right', 'UNARYBOOL'),
