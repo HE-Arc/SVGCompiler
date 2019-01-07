@@ -129,10 +129,9 @@ def synthese(node):
 
             stack.append(shape)
 
-            node = node.next[0]
         elif node.__class__ == nodes.DrawNode:
             shape = valueOfToken(stack.pop())
-            shapeList.append(str(shape))
+            shapeList.append(shape)
         elif node.__class__ == nodes.IfNode:
             ifnode = node
             if node.evaluated == False:
@@ -151,7 +150,7 @@ def synthese(node):
         else:
             node = None
 
-    print(shapeList)
+    return shapeList
 
 
 if __name__ == "__main__":
@@ -167,4 +166,6 @@ if __name__ == "__main__":
         program = programs[i]
 
         entry = thread(program)
-        synthese(entry)
+        shapeList = synthese(entry)
+
+        Shape.buildSVG(shapeList, fileName=fileName + ".svg")
