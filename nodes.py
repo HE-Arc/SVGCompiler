@@ -328,6 +328,8 @@ class NotBooleanException(Exception):
 
 class IfNode(Node):
     def __init__(self, conditionProgram, trueProgram=None, falseProgram=None):
+        self.evaluated = False
+        print("init")
         l = [conditionProgram]
         self.conditionProgram = conditionProgram
         conditionProgramType = self.conditionProgram.getOperationType()

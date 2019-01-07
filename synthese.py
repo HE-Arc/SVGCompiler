@@ -82,11 +82,17 @@ def synthese(node):
             shape = valueOfToken(stack.pop())
             # print(shape)
         elif node.__class__ == nodes.IfNode:
-            cond = stack.pop()
-            if cond:  # si cond vraie, on va à "gauche"
-                node = node.next[0]
-            else:  # sinon à "droite"
-                node = node.next[1]
+            ifnode = node
+            if node.evaluated == False:
+                cond = stack.pop()
+                if cond:  # si cond vraie, on va à "gauche"
+                    node = node.next[0]
+                else:  # sinon à "droite"
+                    node = node.next[1]
+                ifnode.evaluated = True
+            else:
+                node = node.next[2]
+                ifnode.evaluated = False
 
         if node.next:
             node = node.next[0]

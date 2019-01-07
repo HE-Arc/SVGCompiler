@@ -3,10 +3,10 @@
 
     shape $s = [circle: radius=$i, positionX=$i, positionY=$i, color=red];
 
-    if(true)
+    if($i < 2)
     {
         @ $s;
     }
     else
-    integer $d=2;
+        $i=2;
 }

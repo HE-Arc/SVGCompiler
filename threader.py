@@ -30,24 +30,22 @@ def thread(self, lastNode):
 
 @addToClass(nodes.IfNode)
 def thread(self, lastNode):
-    # TODO: a la fin faut revenir au parent du if
     conditionProgram = self.conditionProgram
     trueProgram = self.trueProgram
     falseProgram = self.falseProgram
 
-    exitNode = lastNode.next[-1]
-
     exitCondition = conditionProgram.thread(lastNode)
     exitCondition.addNext(self)
+
     if trueProgram != None:
         exitTrueProgram = trueProgram.thread(self)
-        exitTrueProgram.addNext(exitNode)
+        exitTrueProgram.addNext(self)
+
     if falseProgram != None:
         exitFalseProgram = falseProgram.thread(self)
-        exitFalseProgram.addNext(exitNode)
+        exitFalseProgram.addNext(self)
 
     return self
-
 
 def thread(tree):
     entry = AST.EntryNode()
