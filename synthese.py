@@ -7,6 +7,7 @@ import nodes
 from parser_ import parse  # we cant import a file named 'parser'... ?
 import sys
 import os
+from shapes import *
 from threader import thread
 
 
@@ -28,6 +29,8 @@ unaryOperations = {
     '-': lambda x: -x
 }
 
+
+
 stack = []
 vars = {}
 
@@ -37,11 +40,12 @@ def valueOfToken(t):
         try:
             return vars[t]
         except KeyError:
-            print(f"*** Error: variable {t} undefined !")
+            return t
     return t
 
 
 def synthese(node):
+    shapeList = []
     while node:
         if node.__class__ in [AST.EntryNode, nodes.ProgramNode, nodes.BlockNode]:
             pass
@@ -64,6 +68,7 @@ def synthese(node):
             varType = stack.pop()
             vars[varName] = None
         elif node.__class__ == nodes.AffectationNode:
+            print(node)
             varValue = stack.pop()
             varName = stack.pop()
             vars[varName] = varValue
@@ -76,11 +81,58 @@ def synthese(node):
             continue
         elif node.__class__ == nodes.ShapeNode:
             attrs = {}
-            # depiler la pile jusqu'à ce qu'elle soit vide OU qu'on tombe sur le noeud "de début d'une shape" = premier enfant "inutile" de la shape pushé auparavant
-            print(attrs)
+            shapeType = node.shapetype
+            # fetching attributes
+            for child in node.children:
+                attributeTypeNode = valueOfToken(stack.pop())
+                attributeValueNode = valueOfToken(stack.pop())
+                attrs[attributeTypeNode.__class__] = attributeValueNode
+
+            # default values
+            try:
+                color = attrs[nodes.ColorNode]
+            except KeyError:
+                color = "#000000"
+
+            try:
+                posX = attrs[nodes.PositionXNode]
+            except KeyError:
+                posX = 0
+
+            try:
+                posY = attrs[nodes.PositionYNode]
+            except KeyError:
+                posY = 0
+
+            if shapeType == 'circle':
+                try:
+                    radius = attrs[nodes.RadiusNode]
+                except KeyError:
+                    radius = 1
+            elif shapeType in ['rectangle', 'triangle']:
+                try:
+                    width = attrs[nodes.WidthNode]
+                except KeyError:
+                    width = 1
+                try:
+                    height = attrs[nodes.HeightNode]
+                except KeyError:
+                    height = 1
+
+            # shape creation
+            if shapeType == 'circle':
+                shape = Circle(color=color, posX=posX, posY=posY, radius=radius)
+            elif shapeType == 'rectangle':
+                shape = Rectangle(color=color, posX=posX, posY=posY, width=width, height=height)
+            elif shapeType == 'triangle':
+                shape = Triangle(color=color, posX=posX, posY=posY, width=width, height=height)
+
+            stack.append(shape)
+
+            node = node.next[0]
         elif node.__class__ == nodes.DrawNode:
             shape = valueOfToken(stack.pop())
-            # print(shape)
+            shapeList.append(str(shape))
         elif node.__class__ == nodes.IfNode:
             ifnode = node
             if node.evaluated == False:
@@ -98,6 +150,8 @@ def synthese(node):
             node = node.next[0]
         else:
             node = None
+
+    print(shapeList)
 
 
 if __name__ == "__main__":
