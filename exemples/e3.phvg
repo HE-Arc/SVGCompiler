@@ -2,11 +2,11 @@
     integer $i = 5;
     integer $counter=1;
 
-    while($i < 250)
+    while($i < 1000)
     {
         @[circle: radius=$i, positionX=$i*3, positionY=$i*3, color=red];
 
-        if ($counter>4)
+        if ($counter % 2 == 0)
             @[rectangle: width=$i, positionX=$i*3,height=$i, positionY=$i*3, color=green];
         else
             @[triangle: width=$i, positionX=$i*3,height=$i, positionY=$i*3, color=blue];

@@ -133,7 +133,7 @@ class AffectationNode(Node):
 
         Node.__init__(self, [tokenVariableName, value])
 
-        
+
 
     def __repr__(self):
         return "Affectation"
@@ -286,6 +286,7 @@ class BinaryOperation(Node):
         '-': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
         '*': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
         '/': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
+        '%': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
         '==': (TypeBooleanNode, [(TypeIntegerNode, TypeIntegerNode), (TypeBooleanNode, TypeBooleanNode)]),
         '!=': (TypeBooleanNode, [(TypeIntegerNode, TypeIntegerNode), (TypeBooleanNode, TypeBooleanNode)]),
         '&&': (TypeBooleanNode, [(TypeBooleanNode, TypeBooleanNode)]),

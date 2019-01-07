@@ -16,6 +16,7 @@ binaryOperations = {
     '-': lambda x, y: x - y,
     '*': lambda x, y: x * y,
     '/': lambda x, y: x // y,
+    '%': lambda x, y: x % y,
     '==': lambda x, y: x == y,
     '!=': lambda x, y: x != y,
     '&&': lambda x, y: x and y,

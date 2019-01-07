@@ -68,6 +68,7 @@ t_INTEGER_PLUS = r'\+'
 t_INTEGER_MINUS = r'-'
 t_INTEGER_TIMES = r'\*'
 t_INTEGER_DIVIDE = r'/'
+t_INTEGER_MODULO = r'%'
 
 # Boolean Arithmetic
 t_BOOL_NOT = r'!'
@@ -117,6 +118,7 @@ tokens = (
     'INTEGER_MINUS',
     'INTEGER_TIMES',
     'INTEGER_DIVIDE',
+    'INTEGER_MODULO',
 
     'BOOL_NOT',
 
