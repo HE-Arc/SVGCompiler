@@ -1,4 +1,0 @@
-{
-    boolean $b1 = True;
-    boolean $b2 = False;
-}

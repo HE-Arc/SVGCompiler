@@ -1,0 +1,99 @@
+// Exemple general pour SVGCompiler
+// Sergiy Goloviatinski et Raphael Margueron
+// INF3dlm_b
+
+// <- ceci est un commentaire mono ligne, il peut etre place a la suite d'instruction, mais se stop a la fin de ligne.
+// la fin d'instruction se fait avec le point virgule -> ;
+
+// declaration d'une programme pour une image
+{
+    // Declaration d'un block, doit contenir au moins une instruction sinon il est ignoré
+    {
+    }
+
+    // Declarations de variables
+    {
+        // les variables doivent commencer par dollar -> $ et peuvent que contenir des caractere alphanumerique et le caractere  underscore, la longeur du nom de la variable doit être d'au moins un caractere
+
+        // declaration d'un boolean
+        boolean $b1;
+        // affectation d'un boolean
+        $b1 = true;
+        // declaration et affectation d'un boolean avec le shorthand
+        boolean $b2 = false;
+
+        // declaration d'un entier
+        integer $i1;
+        // affectation d'un entier
+        $i1 = 100;
+        // declaration et affectation d'un entier avec le shorthand
+        integer $i2 = 2;
+    }
+
+    // Arithmetique
+    {
+        // Dans chaqu'un des exemples ci-dessous les constantes peut etre remplace par des variables du même types que la constante.
+
+        // Arithmetique d'entier
+        {
+            // additions
+            $i1 = 1 + 2; // 3
+            // soustractions
+            $i1 = 42 - 3; // 39
+            // multiplications
+            $i1 = 2 * 3; // 6
+            // division entière
+            $i1 = 10 / 5; // 2
+            // utilisation de parenthese pour empecher la priorite des operations
+            $i1 = (4 + 2) * (1 + 3); // 24
+
+            $i1 = -$i1; // opposition de signe
+
+            $i1 = 1~100; // nombre entier aleatoire entre 1 et 100
+        }
+
+        // Arithmetique de boolean
+        {
+            // et logique
+            $b1 = true && false; // -> false
+            // ou logique
+            $b1 = false || true; // -> true
+            // comparaison
+            // égalité
+            $b1 = true == false; // -> false
+            // non-égalité
+            $b1 = true != false; // -> true, equivalant a !(true == false)
+
+            $b1 = !true; // -> false
+        }
+
+        // Arithmetique d'entier vers boolean
+        {
+            // plus petit que
+            $b1 = 0 < 1; // -> true
+            // plus grand que
+            $b1 = 0 > 1; // -> false
+            // égalité
+            $b2 = 0 == 1; // -> false
+            // non-égalité
+            $b2 = 0 == 1; // -> false
+        }
+    }
+
+
+    // Boucle : condition entre parenthèse et doit etre suivi d'un block ou d'une instruction a repeter
+    while($i1 > 0)
+    {
+
+    }
+
+    // test : condition entre parenthèse et doit etre  suivi d'un block ou d'une instruction a executer
+    if ($b1)
+    {
+        integer $i = 0;
+    }//utilisation de la syntaxe sans declaration de block
+}
+// declaration d'un second programme pour une seconde image
+{
+
+}

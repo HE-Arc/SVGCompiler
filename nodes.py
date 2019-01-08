@@ -289,7 +289,7 @@ class UnaryOperation(Node):
         return op
 
     def getOperationType(self):
-        operationLine = BinaryOperation.operationTable[self.operation]
+        operationLine = UnaryOperation.operationTable[self.operation]
         return operationLine[0]
 
     def __repr__(self):

@@ -268,7 +268,7 @@ def p_expression_number(p):
     '''EXPRESSION : NUMBER'''
     p[0] = AST.TokenNumberNode(p[1])  # already converted in int in lexemes.py
 
-
+# the true/false detection could be done in the lexemes instead of here like for the numbers
 def p_expression_true(p):
     '''EXPRESSION : TRUE'''
     p[0] = AST.TokenBooleanNode(True)
