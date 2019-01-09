@@ -176,6 +176,7 @@ class DrawNode(Node):
 def createAttributeErrorStringFromClassName(className):
     return str(className).split("Node")[0].split(".")[-1]
 
+
 class AttributeNode(Node):
     def __init__(self, values, lineno=0):
         self.lineno = lineno
@@ -195,9 +196,9 @@ class ColorNode(AttributeNode):
 
 
 class RadiusNode(AttributeNode):
-    def __init__(self, value,lineno=0):
+    def __init__(self, value, lineno=0):
         self.value = value
-        AttributeNode.__init__(self, [value],lineno)
+        AttributeNode.__init__(self, [value], lineno)
         self.checkType([TypeIntegerNode])
 
     def __repr__(self):
@@ -205,9 +206,9 @@ class RadiusNode(AttributeNode):
 
 
 class PositionXNode(AttributeNode):
-    def __init__(self, value,lineno=0):
+    def __init__(self, value, lineno=0):
         self.value = value
-        AttributeNode.__init__(self, [value],lineno)
+        AttributeNode.__init__(self, [value], lineno)
         self.checkType([TypeIntegerNode])
 
     def __repr__(self):
@@ -215,9 +216,9 @@ class PositionXNode(AttributeNode):
 
 
 class PositionYNode(AttributeNode):
-    def __init__(self, value,lineno=0):
+    def __init__(self, value, lineno=0):
         self.value = value
-        AttributeNode.__init__(self, [value],lineno)
+        AttributeNode.__init__(self, [value], lineno)
         self.checkType([TypeIntegerNode])
 
     def __repr__(self):
@@ -225,9 +226,9 @@ class PositionYNode(AttributeNode):
 
 
 class WidthNode(AttributeNode):
-    def __init__(self, value,lineno=0):
+    def __init__(self, value, lineno=0):
         self.value = value
-        AttributeNode.__init__(self, [value],lineno)
+        AttributeNode.__init__(self, [value], lineno)
         self.checkType([TypeIntegerNode])
 
     def __repr__(self):
@@ -235,9 +236,9 @@ class WidthNode(AttributeNode):
 
 
 class HeightNode(AttributeNode):
-    def __init__(self, value,lineno=0):
+    def __init__(self, value, lineno=0):
         self.value = value
-        AttributeNode.__init__(self, [value],lineno)
+        AttributeNode.__init__(self, [value], lineno)
         self.checkType([TypeIntegerNode])
 
     def __repr__(self):
@@ -251,11 +252,11 @@ class HeightNode(AttributeNode):
 #  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
 #       |_|
 
-'''
+"""
 Input: a list of tuples for a binary operation, a single object for unary operation
 Output: a formatted string of types
-This method is used for the errors
-'''
+This function is used for the errors
+"""
 
 
 def createErrorStringFromClassName(className):
@@ -271,11 +272,11 @@ class UnaryOperation(Node):
         '-': (TypeIntegerNode, [TypeIntegerNode]),
     }
 
-    def __init__(self, operation, operande,lineno=0):
+    def __init__(self, operation, operande, lineno=0):
         Node.__init__(self, operande)
         self.operande = operande
         self.operation = operation
-        self.lineno=lineno
+        self.lineno = lineno
 
         constraints = UnaryOperation.operationTable[self.operation][1]
         op = self.getOperandeType()

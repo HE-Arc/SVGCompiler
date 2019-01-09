@@ -334,8 +334,8 @@ def p_statement_declaration_affetation_shape(p):
     p[0] = AST.BlockNode([declaration, affectation], "declaraffect")
 
 
+# allow useless expression like : > 1 + 2
 def p_useless_expression(p):
-    # allow useless expression like : > 1 + 2
     '''STATEMENT : EXPRESSION'''
     p[0] = p[1]
 

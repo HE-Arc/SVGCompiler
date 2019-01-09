@@ -73,9 +73,9 @@ def synthese(node):
             vars[varName] = varValue
         elif node.__class__ == nodes.LoopNode:
             cond = stack.pop()
-            if cond:  # si cond vraie, on va à "gauche"
+            if cond:
                 node = node.next[0]
-            else:  # sinon à "droite"
+            else: 
                 node = node.next[1]
             continue
         elif node.__class__ == nodes.ShapeNode:
@@ -139,9 +139,9 @@ def synthese(node):
 
             if node.evaluated == False:
                 cond = stack.pop()
-                if cond:  # si cond vraie, on va à "gauche"
+                if cond: 
                     node = node.next[0]
-                elif len(node.next) == 3:  # sinon à "droite"
+                elif len(node.next) == 3:
                     node = node.next[1]
                 ifnode.evaluated = True
             else:
