@@ -1,3 +1,10 @@
+"""
+Module used for the nodes in the AST that we need and semantic analysis by "SVGCompiler"
+It is not meant to be executed directly
+Sergiy Goloviatinski & Raphaël Margueron, inf3dlm-b, HE-Arc
+13.01.19
+"""
+
 from AST import Node
 
 # variable used to determinate if a variable have the right type while creating the tree
@@ -252,14 +259,13 @@ class HeightNode(AttributeNode):
 #  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
 #       |_|
 
-"""
-Input: a list of tuples for a binary operation, a single object for unary operation
-Output: a formatted string of types
-This function is used for the errors
-"""
-
 
 def createErrorStringFromClassName(className):
+    """
+    Input: a list of tuples for a binary operation, a single object for unary operation
+    Output: a formatted string of types
+    This function is used for the semantic error output for binary and unary operations
+    """
     if type(className) is list:
         return " or ".join(map(lambda tup: "/".join(map(lambda x: x().type.split(" ")[-1], tup)), className))
     else:
@@ -267,6 +273,8 @@ def createErrorStringFromClassName(className):
 
 
 class UnaryOperation(Node):
+
+    # Required types for unary operations
     operationTable = {
         '!': (TypeBooleanNode, [TypeBooleanNode]),
         '-': (TypeIntegerNode, [TypeIntegerNode]),
@@ -297,6 +305,8 @@ class UnaryOperation(Node):
 
 
 class BinaryOperation(Node):
+
+    # Required types for binary operations
     operationTable = {
         '+': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
         '-': (TypeIntegerNode, [(TypeIntegerNode, TypeIntegerNode)]),
