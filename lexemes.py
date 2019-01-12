@@ -10,6 +10,25 @@ Sergiy Goloviatinski & Raphaël Margueron, inf3dlm-b, HE-Arc
 
 import ply.lex as lex
 import sys
+from functools import reduce
+import re
+
+conversion_table = {
+    "BOOL_VALUE" : {
+        "true" : True,
+        "false" : False,
+    },
+    "COLOR_HEX" : {
+        "red" : '#ff0000',
+        "green" : '#00ff00',
+        "blue" : '#0000ff',
+        "yellow" : '#ffff00',
+        "black" : '#000000',
+        "white" : '#ffffff',
+    }
+}
+
+conversion_table_words = reduce(lambda a1, a2: list(a1[1].keys()) + list(a2[1].keys()), conversion_table.items()); # grab all the keys in the conversion_table of the subtables
 
 reserved_words = (
     "if",
@@ -24,31 +43,26 @@ reserved_words = (
     "triangle",
     "rectangle",
 
-    "true",
-    "false",
-
     "radius",
     "positionX",
     "positionY",
     "height",
     "width",
-
-    "color",
-    "red",
-    "green",
-    "blue",
-    "yellow",
-    "black",
-    "white"
+    "color"
 )
 
-
-def t_KEYWORD(t):
+def t_keywords(t):
     r'[A-Za-z_]\w*'
-    if t.value in reserved_words:
+    if t.value in reserved_words: # for the keywords juste get them
         t.type = t.value.upper()
         return t
-    else:
+    elif t.value in conversion_table_words: # in the conversion_table so where is it?
+        for subTableName, subTable in conversion_table.items(): # in which subTable is it ?
+            if t.value in subTable:
+                t.value = subTable[t.value]
+                t.type = subTableName
+        return t
+    else: # letters unknown
         return t_error(t)
 
 
@@ -90,7 +104,6 @@ t_BOOL_NOT_EQUAL = r'!='
 # Values
 t_COLOR_HEX = r'\#[0-9A-Fa-f]{6}'
 
-
 def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)
@@ -113,43 +126,13 @@ def t_error(t):
     print(f'Illegal character \'{t.value[0]}\' at line {t.lineno}')
     t.lexer.skip(1)
 
-tokens = (
-    'LINE_BREAK',
-    'SEPARATOR',
-    'AFFECTATION',
-    'DESCRIPTION',
+functions = []
+for key in list(locals().keys()):
+    match = re.search("t_[A-Z]+", key)
+    if match:
+        functions.append(key[2:])
 
-    'BRACE_OPEN',
-    'BRACE_CLOSE',
-    'BRACKET_OPEN',
-    'BRACKET_CLOSE',
-    'SQUAREBRACKET_OPEN',
-    'SQUAREBRACKET_CLOSE',
-
-    'INTEGER_PLUS',
-    'INTEGER_MINUS',
-    'INTEGER_TIMES',
-    'INTEGER_DIVIDE',
-    'INTEGER_MODULO',
-    'INTEGER_RANDOM',
-
-    'BOOL_NOT',
-
-    'BOOL_OR',
-    'BOOL_AND',
-    'BOOL_LT',
-    'BOOL_GT',
-    'BOOL_EQUAL',
-    'BOOL_NOT_EQUAL',
-
-    'COLOR_HEX',
-
-    'DRAW',
-
-    'VARIABLE_NAME',
-
-    'NUMBER',
-) + tuple(map(lambda s: s.upper(), reserved_words))
+tokens = tuple(set(tuple(functions) + tuple(map(lambda s: s.upper(), reserved_words)) + tuple(conversion_table.keys())))
 
 lex.lex()
 

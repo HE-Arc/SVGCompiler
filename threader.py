@@ -68,7 +68,7 @@ if __name__ == '__main__':
     fileExtension = fileSplited[1]
 
     code = open(file).read()
-    programs = parse(code)
+    programs, errorList = parse(code)
 
     for i in range(len(programs)):
         program = programs[i]

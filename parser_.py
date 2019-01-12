@@ -33,7 +33,7 @@ precedence = (
     ('left', 'INTEGER_RANDOM'),
 
     ('right', 'UNARYNUMBER'),
-    ('right', 'UNARYBOOL'),
+    ('right', 'UNARYBOOL')
 )
 
 binaryOperators = (
@@ -145,36 +145,6 @@ def p_colorvalue_colorhex(p):
     '''COLOR_VALUE : COLOR_HEX'''
     p[0] = AST.TokenColorNode(p[1])
 
-
-def p_colorvalue_red(p):
-    '''COLOR_VALUE : RED'''
-    p[0] = AST.TokenColorNode('#ff0000')
-
-
-def p_colorvalue_green(p):
-    '''COLOR_VALUE : GREEN'''
-    p[0] = AST.TokenColorNode('#00ff00')
-
-
-def p_colorvalue_blue(p):
-    '''COLOR_VALUE : BLUE'''
-    p[0] = AST.TokenColorNode('#0000ff')
-
-
-def p_colorvalue_yellow(p):
-    '''COLOR_VALUE : YELLOW'''
-    p[0] = AST.TokenColorNode('#ffff00')
-
-
-def p_colorvalue_black(p):
-    '''COLOR_VALUE : BLACK'''
-    p[0] = AST.TokenColorNode('#000000')
-
-
-def p_colorvalue_white(p):
-    '''COLOR_VALUE : WHITE'''
-    p[0] = AST.TokenColorNode('#ffffff')
-
 #     _   _   _        _ _           _
 #    / \ | |_| |_ _ __(_) |__  _   _| |_ ___
 #   / _ \| __| __| '__| | '_ \| | | | __/ _ \
@@ -278,14 +248,9 @@ def p_expression_number(p):
 
 
 def p_expression_true(p):
-    '''EXPRESSION : TRUE'''
-    p[0] = AST.TokenBooleanNode(True)
+    '''EXPRESSION : BOOL_VALUE'''
+    p[0] = AST.TokenBooleanNode(p[1])
     # the true/false detection could be done in the lexemes instead of here like for the numbers
-
-
-def p_expression_false(p):
-    '''EXPRESSION : FALSE'''
-    p[0] = AST.TokenBooleanNode(False)
 
 
 # __     __         _       _     _
@@ -372,7 +337,7 @@ yacc.yacc(outputdir='./generated')
 if __name__ == '__main__':
     fileName = sys.argv[1]
     prog = open(fileName).read()
-    programs = parse(prog)
+    programs, errorList = parse(prog)
     i = 0
     for program in programs:
         print("Program", i)
