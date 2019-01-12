@@ -129,12 +129,12 @@ class AffectationNode(Node):
         if variableName not in variablesTypes.keys():
             errorList.append(
                 f'UndeclaredVariableException at line {self.lineno} : Variable \'{variableName}\' not declared')
-
-        valueType = value.getOperationType()
-        variableType = variablesTypes[variableName]
-        if valueType != variableType:
-            errorList.append(
-                f'InvalidTypeException at line {self.lineno} : Variable \'{variableName}\' is of type \'{createErrorStringFromClassName(variableType)}\' instead of \'{createErrorStringFromClassName(valueType)}\'')
+        else:
+            valueType = value.getOperationType()
+            variableType = variablesTypes[variableName]
+            if valueType != variableType:
+                errorList.append(
+                    f'InvalidTypeException at line {self.lineno} : Variable \'{variableName}\' is of type \'{createErrorStringFromClassName(variableType)}\' instead of \'{createErrorStringFromClassName(valueType)}\'')
 
         Node.__init__(self, [tokenVariableName, value])
 

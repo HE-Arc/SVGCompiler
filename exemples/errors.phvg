@@ -1,0 +1,18 @@
+//erreurs gérés, commenté
+{
+     integer $i = true; //InvalidTypeException
+     boolean $b = 1; //InvalidTypeException
+     $c1 = 1; //UndeclaredVariableException
+     @ 1; //InvalidTypeException
+     [circle: radius=true]; //InvalidTypeException, pareil pour les autres attributs
+     1 + true; // InvalidOperandeException, pareil pour les autres opérateurs
+    {
+        integer $i = 1;
+        $i = !$i; // InvalidOperandeException
+    }
+
+}
+//erreur non-gérés
+{
+    // @ $undeclared_variable;
+}
