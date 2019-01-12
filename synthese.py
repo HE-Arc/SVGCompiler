@@ -11,7 +11,7 @@ Sergiy Goloviatinski & Raphaël Margueron, inf3dlm-b, HE-Arc
 from AST import addToClass
 import AST
 import nodes
-from parser_ import parse  # we cant import a file named 'parser'... ?
+from parser_ import parse  # we cant import a file named 'parser' on Windows systems... ?
 import sys
 import os
 import random
