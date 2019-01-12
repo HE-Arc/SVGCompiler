@@ -103,8 +103,10 @@ def t_newline(t):
 
 # useful ! : https://stackoverflow.com/a/29595453/9263555
 # i wasted a ton of time because i tried to put all in t_ignore with a single regex with pipes
-t_ignore_comments = r'//.*\n'
-t_ignore_linebreak = r'\n'
+def t_ignore_comments(t):
+    r'//.*\n'
+    t.lexer.lineno += 1
+
 t_ignore_spaces = r'\s'
 
 def t_error(t):

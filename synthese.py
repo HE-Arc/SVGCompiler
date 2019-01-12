@@ -184,6 +184,7 @@ if __name__ == "__main__":
     if len(errors) > 0:
         print("Errors :")
         print("\n".join(errors))
+        print("Compilation aborted")
         exit()
 
     i = 0
