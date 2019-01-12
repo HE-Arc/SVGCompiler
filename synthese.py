@@ -75,7 +75,7 @@ def synthese(node):
             cond = stack.pop()
             if cond:
                 node = node.next[0]
-            else: 
+            else:
                 node = node.next[1]
             continue
         elif node.__class__ == nodes.ShapeNode:
@@ -139,7 +139,7 @@ def synthese(node):
 
             if node.evaluated == False:
                 cond = stack.pop()
-                if cond: 
+                if cond:
                     node = node.next[0]
                 elif len(node.next) == 3:
                     node = node.next[1]
@@ -165,7 +165,13 @@ if __name__ == "__main__":
 
     code = open(file).read()
     print("Parsing file :", file)
-    programs = parse(code)
+    programs, errors = parse(code)
+
+    if len(errors) > 0:
+        print("Errors :")
+        print("\n".join(errors))
+        exit()
+
     i = 0
     for program in programs:
 

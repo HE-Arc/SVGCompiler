@@ -80,20 +80,70 @@
         }
     }
 
+    // shapes
+    {
+        @ [circle: radius=20~40, positionX=40~60, positionY=40~60, color=red];
+    }
+}
+// declaration d'un second programme pour une seconde image, créer aléatoirement entre 10-20 formes sur une images
+{
+    integer $i = 0;
+    integer $size = 50;
 
     // Boucle : condition entre parenthèse et doit etre suivi d'un block ou d'une instruction a repeter
-    while($i1 > 0)
+    while($i < $size * (10~20))
     {
+        // test : condition entre parenthèse et doit etre  suivi d'un block ou d'une instruction a executer
+        if ($i % 3 == 0)
+        {
+            @ [rectangle: width=$size, height=$size, positionX=$i, positionY=$i, color=green];
+        }
 
+        //utilisation de la syntaxe sans declaration de block
+        if ($i % 3 == 1)
+            @ [triangle: width=$size, height=$size, positionX=$i, positionY=$i, color=blue];
+        if ($i % 3 == 2)
+            @ [circle: radius=$size / 2, positionX=$i + $size/2, positionY=$i + $size/2, color=red];
+
+        $i = $i + $size;
+    }
+}
+// troisième image : cercles concentiques noir et blanc
+{
+    integer $radius = 400;
+    integer $dist = 2;
+
+    integer $centerX = $radius + 0; //copie par valeur
+    integer $centerY = $radius * 1; //copie par valeur
+
+    integer $i = 0;
+
+    while($radius > 0)
+    {
+        if ($i % 2 == 0)
+            @ [circle: radius=$radius, positionX=$centerX, positionY=$centerY]; //noir
+        else
+            @ [circle: radius=$radius, positionX=$centerX, positionY=$centerY, color=white]; //blanc
+
+        $radius = $radius - $dist;
+        $i = $i + 1;
+    }
+}
+//erreurs gérés, commenté
+{
+    // integer $i = true; //InvalidTypeException
+    // boolean $b = 1; //InvalidTypeException
+    // $c1 = 1; //UndeclaredVariableException
+    // @ 1; //InvalidTypeException
+    // [circle: radius=true]; //InvalidTypeException, pareil pour les autres attributs
+    // 1 + true; // InvalidOperandeException, pareil pour les autres opérateurs
+    {
+        integer $i = 1;
+        $i = !$i; // InvalidOperandeException
     }
 
-    // test : condition entre parenthèse et doit etre  suivi d'un block ou d'une instruction a executer
-    if ($b1)
-    {
-        integer $i = 0;
-    }//utilisation de la syntaxe sans declaration de block
 }
-// declaration d'un second programme pour une seconde image
+//erreur non-gérés
 {
-
+    // @ $undeclared_variable;
 }

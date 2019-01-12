@@ -3,6 +3,10 @@ from AST import Node
 # variable used to determinate if a variable have the right type while creating the tree
 variablesTypes = dict()
 
+valide_code = True
+
+errorList = []
+
 
 class ProgramNode(Node):
     type = "Program"
@@ -116,17 +120,14 @@ class AffectationNode(Node):
         variableName = tokenVariableName.variableName
         self.lineno = lineno
         if variableName not in variablesTypes.keys():
-            print(
+            errorList.append(
                 f'UndeclaredVariableException at line {self.lineno} : Variable \'{variableName}\' not declared')
-            exit()
 
         valueType = value.getOperationType()
         variableType = variablesTypes[variableName]
         if valueType != variableType:
-
-            print(
-                f'InvalidTypeException at line {self.lineno} : Variable \'{variableName}\' is of type \'{createErrorStringFromClassName(valueType)}\' instead of \'{createErrorStringFromClassName(variableType)}\'')
-            exit()
+            errorList.append(
+                f'InvalidTypeException at line {self.lineno} : Variable \'{variableName}\' is of type \'{createErrorStringFromClassName(variableType)}\' instead of \'{createErrorStringFromClassName(valueType)}\'')
 
         Node.__init__(self, [tokenVariableName, value])
 
@@ -159,10 +160,10 @@ class DrawNode(Node):
     def __init__(self, value, lineno=0):
         valueType = value.getOperationType()
         self.lineno = lineno
+
         if valueType is not TypeShapeNode:
-            print(
+            errorList.append(
                 f'InvalidTypeException at line {self.lineno} : Must be a shape to draw instead of {createErrorStringFromClassName(valueType)}')
-            exit()
 
         Node.__init__(self, [value])
 
@@ -185,9 +186,8 @@ class AttributeNode(Node):
     def checkType(self, allowedType):
         valueType = self.value.getOperationType()
         if valueType not in allowedType:
-            print(
+            errorList.append(
                 f'InvalidTypeException at line {self.lineno} : Must be a {createErrorStringFromClassName(allowedType[0])} for this attribute ({createAttributeErrorStringFromClassName(self.__class__)})')
-            exit()
 
 
 class ColorNode(AttributeNode):
@@ -281,9 +281,8 @@ class UnaryOperation(Node):
         constraints = UnaryOperation.operationTable[self.operation][1]
         op = self.getOperandeType()
         if op not in constraints:
-            print(
+            errorList.append(
                 f'InvalidOperandeException at line {self.lineno} : For unary operation \'{self.operation}\' use \'{createErrorStringFromClassName(constraints[0])}\' instead of \'{createErrorStringFromClassName(op)}\'')
-            exit()
 
     def getOperandeType(self):
         op = self.operande[0].getOperationType()
@@ -322,9 +321,8 @@ class BinaryOperation(Node):
         constraints = BinaryOperation.operationTable[self.operation][1]
         op = self.getOperandeType()
         if op not in constraints:
-            print(
+            errorList.append(
                 f'InvalidOperandeException at line {self.lineno} : For binary operation \'{self.operation}\' use \'{createErrorStringFromClassName(constraints)}\' instead of \'{createErrorStringFromClassName([op])}\'')
-            exit()
 
     def getOperandeType(self):
         op1 = self.operandes[0].getOperationType()
@@ -353,9 +351,8 @@ class IfNode(Node):
         self.conditionProgram = conditionProgram
         conditionProgramType = self.conditionProgram.getOperationType()
         if conditionProgramType is not TypeBooleanNode:
-            print(
+            errorList.append(
                 f"NotBooleanException at line {self.lineno} : Must be a boolean for a If")
-            exit()
 
         self.trueProgram = trueProgram
         self.falseProgram = falseProgram
@@ -377,9 +374,8 @@ class LoopNode(Node):
         Node.__init__(self, [conditionProgram, trueProgram])
         conditionProgramType = self.conditionProgram.getOperationType()
         if conditionProgramType is not TypeBooleanNode:
-            print(
+            errorList.append(
                 f"NotBooleanException at line {self.lineno} : Must be a boolean for a Loop")
-            exit()
 
     def __repr__(self):
         return "Loop"

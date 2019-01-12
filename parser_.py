@@ -355,7 +355,7 @@ def parse(program):
         else:
             instructions = block
         programs.append(AST.ProgramNode(instructions))
-    return programs
+    return programs, AST.errorList
 
 
 yacc.yacc(outputdir='./generated')
