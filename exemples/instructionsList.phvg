@@ -80,11 +80,11 @@
         }
     }
 
-
+    $i1=100;
     // Boucle : condition entre parenthèse et doit etre suivi d'un block ou d'une instruction a repeter
     while($i1 > 0)
     {
-
+        $i1=$i1-1;
     }
 
     // test : condition entre parenthèse et doit etre  suivi d'un block ou d'une instruction a executer
@@ -92,6 +92,9 @@
     {
         integer $i = 0;
     }//utilisation de la syntaxe sans declaration de block
+
+    //Dessin d'une rectangle rose avec que des attributs aléatoires
+    @[rectangle: width=10~100, positionX=1~100,height=10~100, positionY=1~100, color=#ff1493];
 }
 // declaration d'un second programme pour une seconde image
 {

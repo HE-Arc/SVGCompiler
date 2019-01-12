@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Module used to thread an AST for "SVGCompiler"
+It is not meant to be directly executed for a "normal" use, execute it only for intermediate debugging purposes if you want to see a pdf with the threaded AST
+Sergiy Goloviatinski & Raphaël Margueron, inf3dlm-b, HE-Arc
+13.01.19
+"""
+
 from AST import addToClass
 import AST
 import nodes
@@ -37,15 +44,16 @@ def thread(self, lastNode):
     exitCondition = conditionProgram.thread(lastNode)
     exitCondition.addNext(self)
 
-    if trueProgram != None:
+    if trueProgram is not None:
         exitTrueProgram = trueProgram.thread(self)
         exitTrueProgram.addNext(self)
 
-    if falseProgram != None:
+    if falseProgram is not None:
         exitFalseProgram = falseProgram.thread(self)
         exitFalseProgram.addNext(self)
 
     return self
+
 
 def thread(tree):
     entry = AST.EntryNode()
@@ -78,5 +86,3 @@ if __name__ == '__main__':
 
         print("Generating threaded graphical tree...")
         graph.write_pdf(graphNameThreaded)
-
-    # exit()

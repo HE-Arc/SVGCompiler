@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Module used for the syntaxical analysis by "SVGCompiler"
+It is not meant to be directly executed for a "normal" use, execute it only for intermediate debugging purposes if you want to see a pdf containing the AST
+Sergiy Goloviatinski & Raphaël Margueron, inf3dlm-b, HE-Arc
+13.01.19
+"""
+
 import ply.yacc as yacc
 from lexemes import tokens
 import nodes as AST
@@ -93,6 +100,7 @@ def p_if(p):
     p[0] = [AST.IfNode(p[3], p[5][0], lineno=p.lineno(3))] + \
         p[5][1:
              ]  # <- only take the first ABSTRACT_STATEMENT following the expression (target block) and add the remaining list to the current return list
+    # lineno is used to show the linenumber in an error message if the semantic is false
 
 
 def p_if_else(p):
@@ -268,10 +276,11 @@ def p_expression_number(p):
     '''EXPRESSION : NUMBER'''
     p[0] = AST.TokenNumberNode(p[1])  # already converted in int in lexemes.py
 
-# the true/false detection could be done in the lexemes instead of here like for the numbers
+
 def p_expression_true(p):
     '''EXPRESSION : TRUE'''
     p[0] = AST.TokenBooleanNode(True)
+    # the true/false detection could be done in the lexemes instead of here like for the numbers
 
 
 def p_expression_false(p):

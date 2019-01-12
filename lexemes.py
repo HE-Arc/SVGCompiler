@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Module used for the lexical analysis by "SVGCompiler"
+It is not meant to be directly executed for a "normal" use, execute it only for intermediate debugging purposes
+Sergiy Goloviatinski & Raphaël Margueron, inf3dlm-b, HE-Arc
+13.01.19
+"""
+
 import ply.lex as lex
 import sys
 
@@ -96,9 +103,11 @@ t_ignore_comments = r'//.*\n'
 t_ignore_linebreak = r'\n'
 t_ignore_spaces = r'\s'
 
+
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
+
 
 def t_error(t):
     print(f'Illegal character \'{t.value[0]}\' at line {t.lineno}')

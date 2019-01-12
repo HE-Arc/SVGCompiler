@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Module used to define how to synthese different SVG elements for "SVGCompiler"
+It is not meant to be executed directly
+Sergiy Goloviatinski & Raphaël Margueron, inf3dlm-b, HE-Arc
+13.01.19
+"""
+
 
 class Shape(object):
 
@@ -11,8 +18,11 @@ class Shape(object):
 
     @staticmethod
     def buildSVG(shapeList, fileName):
-        with open(fileName, 'w') as file: 
-            file.write('<svg xmlns="http://www.w3.org/2000/svg">\n') 
+        """
+        Method to create a SVG document named "fileName" containing all the shapes in "shapeList"
+        """
+        with open(fileName, 'w') as file:
+            file.write('<svg xmlns="http://www.w3.org/2000/svg">\n')
             for shape in shapeList:
                 file.write(f'{shape}\n')
             file.write('</svg>')

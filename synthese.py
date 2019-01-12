@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Module used for the SVG code synthesis from an AST by "SVGCompiler"
+It is the "main" program for our program and is the only one meant to be directly executed for a non-debugging use
+Sergiy Goloviatinski & Raphaël Margueron, inf3dlm-b, HE-Arc
+13.01.19
+"""
+
 from AST import addToClass
 import AST
 import nodes
@@ -11,6 +18,7 @@ import random
 from shapes import *
 from threader import thread
 
+# Lambda expressions to be executed for each binary operation
 binaryOperations = {
     '+': lambda x, y: x + y,
     '-': lambda x, y: x - y,
@@ -26,12 +34,17 @@ binaryOperations = {
     '~': lambda min, max: random.randint(min, max)
 }
 
+# Lambda expressions to be executed for each unary operation
 unaryOperations = {
     '!': lambda x: not x,
     '-': lambda x: -x
 }
 
+# Intermediate stack used for the synthese (e.g. first we push shape's attributes on the stack, and then we pop the attributes to construct a shape,
+#  or first we push a variable value and a variable name and then we pop these two to affect the value to the name)
 stack = []
+
+# Dict containing variables: the key is the variable name and the associated value is the variable value (the type is given by the AST node type and is managed by the semantic analysis)
 vars = {}
 
 
@@ -54,6 +67,7 @@ def synthese(node):
         elif node.__class__ == nodes.TokenVariableNameNode:
             stack.append(node.variableName)
         elif node.__class__ in [nodes.TypeBooleanNode, nodes.TypeIntegerNode, nodes.TypeShapeNode] or node.__class__.__bases__[-1] is nodes.AttributeNode:
+            # node.__class__.__bases__[-1] means "any class that inherits from AttributeNode"
             stack.append(node)
         elif node.__class__ == nodes.BinaryOperation:
             arg2 = valueOfToken(stack.pop())
@@ -64,7 +78,7 @@ def synthese(node):
             stack.append(unaryOperations[node.operation](arg1))
         elif node.__class__ == nodes.DeclarationNode:
             varName = stack.pop()
-            # we don't need the type because it is checked in the semantic analysis but it is in the tree
+            # we don't need the varType because it is checked in the semantic analysis but it is in the tree
             varType = stack.pop()
             vars[varName] = None
         elif node.__class__ == nodes.AffectationNode:
@@ -75,7 +89,7 @@ def synthese(node):
             cond = stack.pop()
             if cond:
                 node = node.next[0]
-            else: 
+            else:
                 node = node.next[1]
             continue
         elif node.__class__ == nodes.ShapeNode:
@@ -137,9 +151,9 @@ def synthese(node):
         elif node.__class__ == nodes.IfNode:
             ifnode = node
 
-            if node.evaluated == False:
+            if not node.evaluated:
                 cond = stack.pop()
-                if cond: 
+                if cond:
                     node = node.next[0]
                 elif len(node.next) == 3:
                     node = node.next[1]
@@ -168,7 +182,7 @@ if __name__ == "__main__":
     programs = parse(code)
     i = 0
     for program in programs:
-
+        # Each code part delimitated with braces will result in an individual .svg output file
         entry = thread(program)
         shapeList = synthese(entry)
 
