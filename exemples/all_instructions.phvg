@@ -83,6 +83,8 @@
     // shapes
     {
         @ [circle: radius=20~40, positionX=40~60, positionY=40~60, color=red];
+        @ [rectangle: width=20~40, height=20~40, positionX=40~60, positionY=40~60, color=green];
+        @ [triangle: width=20~40, height=20~40, positionX=40~60, positionY=40~60, color=blue];
     }
 }
 // declaration d'un second programme pour une seconde image, créer aléatoirement entre 10-20 formes sur une images
