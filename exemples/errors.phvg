@@ -10,8 +10,34 @@
         integer $i = 1;
         $i = !$i; // InvalidOperandeException at line 11 : For unary operation '!' use 'Boolean' instead of 'Integer'
     }
+    {
+        boolean $b2=false;
+        $b2=-$b2; //InvalidOperandeException at line 15 : For unary operation '-' use 'Integer' instead of 'Boolean'
+        //InvalidTypeException at line 15 : Variable '$b2' is of type 'Boolean' instead of 'Integer'
+    }
+
+    integer $i=1;
+    if($i) //NotBooleanException at line 19 : Must be a boolean for a If
+    {
+        $i=$i-1;
+    }
+
+    while($i) //NotBooleanException at line 23 : Must be a boolean for a Loop
+    {
+        $i=$i+1;
+    }
 }
-//erreur non-gérés, connue
+//erreurs non-gérés, connue, si on décommente ces lignes on aura des erreurs python non gérés par nous
 {
     // @ $undeclared_variable; // les variables non déclaré utilisé avec l'opérateur de dessin
+
+    //if(1<2)
+    //{
+    //    //si le bloc du if est vide, on a une erreur
+    //}
+
+    //while(2>1)
+    //{
+    //      //si le bloc du while est vide, on a une erreur  
+    //}
 }
