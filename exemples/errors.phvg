@@ -1,3 +1,7 @@
+// Exemple des erreurs gérés ou non par SVGCompiler
+// Sergiy Goloviatinski et Raphael Margueron
+// INF3dlm_b
+
 //erreurs gérés, commenté
 {
     integer $i = true; //InvalidTypeException at line 3 : Variable '$i' is of type 'Integer' instead of 'Boolean'

@@ -24,7 +24,7 @@ class Shape(object):
         with open(fileName, 'w') as file:
             file.write('<svg xmlns="http://www.w3.org/2000/svg">\n')
             for shape in shapeList:
-                file.write(f'{shape}\n')
+                file.write(f'\t{shape}\n')
             file.write('</svg>')
 
 
