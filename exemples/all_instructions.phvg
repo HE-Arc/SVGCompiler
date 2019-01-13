@@ -112,9 +112,10 @@
 }
 // troisième image : cercles concentiques noir et blanc
 {
-    integer $radius = 400;
+    integer $radius = --400;
     integer $dist = 2;
 
+	// nous sommes obligé de copier la valeur du radius car sinon la position du centre va être décalé
     integer $centerX = $radius + 0; //copie par valeur
     integer $centerY = $radius * 1; //copie par valeur
 
